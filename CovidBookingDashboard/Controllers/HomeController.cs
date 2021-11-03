@@ -55,6 +55,36 @@ namespace CovidBookingDashboard.Controllers
                     VisitDate = Convert.ToDateTime(@dr["VisitDate"]),
                     VisitTime = @dr["VisitTime"].ToString(),
                     CollectionSlot = @dr["CollectionSlot"].ToString(),
+                    status = Convert.ToInt32(@dr["status"].ToString()),
+
+                });
+            }
+
+            return Json(patientslist, JsonRequestBehavior.AllowGet);
+        }
+        public JsonResult getBookingsByStatus(string sDate, string eDate, int status)
+        {
+            DateTime StartDate;
+            DateTime EndDate;
+            StartDate= string.IsNullOrEmpty(sDate) ? StartDate = DateTime.Today.AddDays(-2) : Convert.ToDateTime(sDate);
+            EndDate = string.IsNullOrEmpty(eDate) ? EndDate = DateTime.Today : Convert.ToDateTime(eDate);
+            // OnlinePatientModel patients = new OnlinePatientModel();
+            List <OnlinePatientModel> patientslist = new List<OnlinePatientModel>();
+            DataTable dtFiles = GetUsersRegisteredByDateRangeByStatus(StartDate, EndDate, status);
+            foreach (DataRow dr in dtFiles.Rows)
+            {
+                patientslist.Add(new OnlinePatientModel
+                {
+                    FirstName = @dr["FirstName"].ToString(),
+                    Surname = @dr["Surname"].ToString(),
+                    OtherNames = @dr["OtherNames"].ToString(),
+                    Telephone = @dr["Telephone"].ToString(),
+                    Email = @dr["Email"].ToString(),
+                    IdNumber = @dr["IdNumber"].ToString(),
+                    VisitDate = Convert.ToDateTime(@dr["VisitDate"]),
+                    VisitTime = @dr["VisitTime"].ToString(),
+                    CollectionSlot = @dr["CollectionSlot"].ToString(),
+                    status= Convert.ToInt32(@dr["status"].ToString()),
 
                 });
             }
@@ -107,6 +137,19 @@ where cast(DateCreated as Date) between  cast({startDate} as Date) and cast({end
             con.Close();
             return dtData;
         }
+        private DataTable GetUsersRegisteredByDateRangeByStatus(DateTime startDate, DateTime endDate, int status)
+        {
+            DataTable dtData = new DataTable();
+            SqlConnection con = new SqlConnection(conString);
+            con.Open();
+            SqlCommand command = new SqlCommand($@"select * from onlinepatients 
+where cast(DateCreated as Date) between  cast({startDate} as Date) and cast({endDate} as Date) and status={1}
+", con);
+            SqlDataAdapter da = new SqlDataAdapter(command);
+            da.Fill(dtData);
+            con.Close();
+            return dtData;
+        }
         private DataTable GetUsersRegisteredByDate(DateTime date)
         {
             DataTable dtData = new DataTable();
@@ -121,8 +164,10 @@ where cast(DateCreated as Date) = cast({date} as Date)", con);
         }
 
 
-        public bool UpdateStatus(int newstatus, Guid cycleId)
+
+        public JsonResult UpdateStatus(int newstatus, Guid cycleId)
         {
+            var responseMessage = new ResponseMessage();
             string strQry = "update onlinepatients set status=" +
                 newstatus + " where cycleId='"+ cycleId + "'";
             SqlConnection con = new SqlConnection(conString);
@@ -131,9 +176,18 @@ where cast(DateCreated as Date) = cast({date} as Date)", con);
             int numResult = command.ExecuteNonQuery();
             con.Close();
             if (numResult > 0)
-                return true;
+            {
+                responseMessage.Status = "200";
+                responseMessage.Message = "success";
+                return Json(responseMessage, JsonRequestBehavior.AllowGet);
+            }
             else
-                return false;
+            {
+                responseMessage.Status = "500";
+                responseMessage.Message = "Something went wrong";
+                return Json(responseMessage, JsonRequestBehavior.AllowGet);
+            }
+                
         }
     }
 }
