@@ -27,8 +27,8 @@ namespace CovidBookingDashboard.Controllers
                     Telephone = @dr["Telephone"].ToString(),
                     Email = @dr["Email"].ToString(),
                     IdNumber = @dr["IdNumber"].ToString(),
-                    VisitDate = Convert.ToDateTime(@dr["VisitDate"].ToString()),
-                    VisitTime = @dr["VisitTime"].ToString(),
+                    VisitDate = Convert.ToDateTime(@dr["VisitDate"]).ToString(),
+                    VisitTime = Convert.ToDateTime(@dr["DateCreated"]).ToString(),
                     CollectionSlot = @dr["CollectionSlot"].ToString(),
 
                 });
@@ -52,11 +52,13 @@ namespace CovidBookingDashboard.Controllers
                     Telephone = @dr["Telephone"].ToString(),
                     Email = @dr["Email"].ToString(),
                     IdNumber = @dr["IdNumber"].ToString(),
-                    VisitDate = Convert.ToDateTime(@dr["VisitDate"]),
-                    VisitTime = @dr["VisitTime"].ToString(),
+                    VisitDate = Convert.ToDateTime(@dr["VisitDate"]).ToString("MM-dd-yyyy"),
+                    VisitTime = Convert.ToDateTime(@dr["DateCreated"]).ToString("HH:mm:ss"),
                     CollectionSlot = @dr["CollectionSlot"].ToString(),
                     status = Convert.ToInt32(@dr["status"].ToString()),
-
+                    TypeOfTestDescription = dr["TypeOfTestDescription"].ToString(),
+                    CollectionLocation = dr["CollectionLocation"].ToString(),
+                    DateCreated = Convert.ToDateTime(@dr["DateCreated"]).ToString("MM-dd-yyyy"),
                 });
             }
 
@@ -81,10 +83,14 @@ namespace CovidBookingDashboard.Controllers
                     Telephone = @dr["Telephone"].ToString(),
                     Email = @dr["Email"].ToString(),
                     IdNumber = @dr["IdNumber"].ToString(),
-                    VisitDate = Convert.ToDateTime(@dr["VisitDate"]),
-                    VisitTime = @dr["VisitTime"].ToString(),
+                    VisitDate = Convert.ToDateTime(@dr["VisitDate"]).ToString("MM-dd-yyyy"),
+                    VisitTime = Convert.ToDateTime(@dr["DateCreated"]).ToString("HH:mm:ss"),
                     CollectionSlot = @dr["CollectionSlot"].ToString(),
                     status= Convert.ToInt32(@dr["status"].ToString()),
+                    TypeOfTestDescription = dr["TypeOfTestDescription"].ToString(),
+                    CollectionLocation = dr["CollectionLocation"].ToString(),
+                    DateCreated = Convert.ToDateTime(@dr["DateCreated"]).ToString("MM-dd-yyyy"),
+                    CycleId= Guid.Parse( dr["CycleId"].ToString()),
 
                 });
             }
