@@ -27,7 +27,7 @@ namespace CovidBookingDashboard.Controllers
                     Telephone = @dr["Telephone"].ToString(),
                     Email = @dr["Email"].ToString(),
                     IdNumber = @dr["IdNumber"].ToString(),
-                    VisitDate = Convert.ToDateTime( @dr["VisitDate"]),
+                    VisitDate = Convert.ToDateTime(@dr["VisitDate"].ToString()),
                     VisitTime = @dr["VisitTime"].ToString(),
                     CollectionSlot = @dr["CollectionSlot"].ToString(),
 
@@ -37,6 +37,30 @@ namespace CovidBookingDashboard.Controllers
             return View();
         }
 
+        public JsonResult getBookings()
+        {
+            // OnlinePatientModel patients = new OnlinePatientModel();
+            List<OnlinePatientModel> patientslist = new List<OnlinePatientModel>();
+            DataTable dtFiles = GetUsersRegistered();
+            foreach (DataRow dr in dtFiles.Rows)
+            {
+                patientslist.Add(new OnlinePatientModel
+                {
+                    FirstName = @dr["FirstName"].ToString(),
+                    Surname = @dr["Surname"].ToString(),
+                    OtherNames = @dr["OtherNames"].ToString(),
+                    Telephone = @dr["Telephone"].ToString(),
+                    Email = @dr["Email"].ToString(),
+                    IdNumber = @dr["IdNumber"].ToString(),
+                    VisitDate = Convert.ToDateTime(@dr["VisitDate"]),
+                    VisitTime = @dr["VisitTime"].ToString(),
+                    CollectionSlot = @dr["CollectionSlot"].ToString(),
+
+                });
+            }
+
+            return Json(patientslist, JsonRequestBehavior.AllowGet);
+        }
         public ActionResult About()
         {
             ViewBag.Message = "Your application description page.";
@@ -44,6 +68,12 @@ namespace CovidBookingDashboard.Controllers
             return View();
         }
 
+        public ActionResult Index2()
+        {
+            ViewBag.Message = "Your application description page.";
+
+            return View();
+        }
         public ActionResult Contact()
         {
             ViewBag.Message = "Your contact page.";

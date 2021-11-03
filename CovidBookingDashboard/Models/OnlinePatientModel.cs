@@ -32,7 +32,7 @@ namespace CovidBookingDashboard.Models
         public string Town { get; set; }
         public string Residence { get; set; }
         public string Occupation { get; set; }
-        public DateTime VisitDate { get; set; }
+        public DateTime? VisitDate { get; set; }
         public string PassportId { get; set; }
         public string FlightNumber { get; set; }
         public string CountryTo { get; set; }
