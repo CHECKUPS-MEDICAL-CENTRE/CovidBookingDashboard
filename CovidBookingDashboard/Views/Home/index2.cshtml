@@ -26,7 +26,6 @@
                 contentType: 'application/json;charset=utf-8',
                 success: function (res) {
                     dataBookings = res;
-                    console.log(res);
                     bookings = res;
                     populatBookings();
                 }
@@ -51,18 +50,18 @@
                     { title: "Visit Date", data: "VisitDate" },
                     {
                         title: "Status", data: null, render: function (data, type, row) {
-                            if (data.status === 0) {
+                            if (data.status === 1) {
                                 return '<span class="label label-danger">New</span>';
                             }
-                            else if (data.status === 1) {
-                                return '<span class="label label-default">Tested</span>';
+                            else if (data.status === 2) {
+                                return '<span class="label label-default">Confirmed</span>';
                             }
-                            else if (data.Status === 2) {
-                                return '<span class="label label-success">Closed</span>';
-                            } else if (data.Status === 3) {
-                                return '<span class="label label-warning">Booked</span>';
+                            else if (data.Status === 3) {
+                                return '<span class="label label-success">Sample Collected</span>';
                             } else if (data.Status === 4) {
-                                return '<span class="label label-info">Assigned</span>';
+                                return '<span class="label label-warning">Has Result</span>';
+                            } else if (data.Status === 5) {
+                                return '<span class="label label-info">Completed</span>';
                             }
 
                         }
@@ -70,30 +69,97 @@
                     {
                         title: "Actions", data: null, render: function (data, type, row) {
 
-                            if (data.Status === 3 || data.Status === 4) {
-                                if (type === 'display') {
-                                    dt = '<center><a class="btn btn-primary " onclick="updateLicence(\'' + data.CycleId + '\')">UPDATE</a></center>';
-                                }
-                            } else if (data.Status === 2) {
-                                if (type === 'display') {
-                                    dt = '<center><a class="btn btn-primary " onclick="updateLicence(\'' + data.CycleId + '\')">UPDATE</a></center>';
-                                }
+                            if (data.status === 1) {
+                               // if (type === 'display') {
+                                return '<center><a class="btn btn-primary " onclick="updateBooking(\'' + data.CycleId + '\')">CONFIRM</a></center>';
+                               // }
+                            } else if (data.status === 2 && data.isHomeSampleCollection ===1) {
+                                return '<center><a class="btn btn-primary " onclick="updateBooking(\'' + data.CycleId + '\')">Sample Collected</a></center>';
+                                //}
                             }
-                            else if (data.Status === 1) {
-                                if (type === 'display') {
-                                    dt = '<center><a class="btn btn-primary " onclick="updateLicence(\'' + data.CycleId + '\')">UPDATE</a></center>';
-                                }
-                            } else if (data.Status === 0) {
-                                dt = '<center><a class="btn btn-primary " onclick="updateLicence(\'' + data.CycleId + '\')">UPDATE</a></center>';
+                            else if (data.status === 3) {
+                                //if (type === 'display') {
+                                return '<center><a class="btn btn-primary " onclick="updateBooking(\'' + data.CycleId + '\')">Send Results</a></center>';
+                                //}
+                            } else if (data.status === 4) {
+                                return '<center><a class="btn btn-primary " onclick="updateBooking(\'' + data.CycleId + '\')">UPDATE</a></center>';
                             }
-                            else if (data.Status === 5) {
-                                dt = '<center><a class="btn btn-primary " onclick="updateLicence(\'' + data.CycleId + '\')">UPDATE</a></center>';
+                            else if (data.status === 5) {
+                                return '<center><a class="btn btn-primary " onclick="updateBooking(\'' + data.CycleId + '\')">Resend Results</a></center>';
                             }
-                            return dt;
+                            else
+                                return null
                         },
                         className: "dt-body-center"
                     },
                 ]
+            });
+        }
+
+        function updateBooking(id) {
+            jQuery.grep(dataBookings, function (n, i) {
+                console.log(n);
+                if (parseInt(n.ID) === parseInt(id)) {
+                    $('#clientName').val(n.FirstName);
+                    $('#mid').val(id);
+                    $('#status').val(id);
+                }
+            });
+            $('#PatientBookingModal').modal('show');
+        }
+
+        function ClientUpdate() {
+            console.log($('#mid').val());
+            var url = '';
+            var postObj = {
+                "ID": $('#mid').val(),
+                "status": $('#status').val()
+            };
+            customPost("Proceed to update booking?", url, postObj, 'PatientBookingModal', 'PatientBookingModal',
+                'PATIENT INFORMATION', populatBookings);
+        }
+
+        function customPost(text, url, postObj, modalName, formName, actionName, populatingClass) {
+            swal({
+                title: "ARE YOU SURE?",
+                text: text,
+                type: 'warning',
+                showCancelButton: true,
+                showConfirmButton: true,
+                confirmButtonClass: 'btn btn-success',
+                cancelButtonClass: 'btn btn-danger',
+                confirmButtonText: 'Yes!',
+                closeOnConfirm: false,
+                closeOnCancel: false
+            }, function (isConfirm) {
+                if (isConfirm) {
+                    $.ajax({
+                        url: url,
+                        data: JSON.stringify(postObj),
+                        contentType: "application/json;charst=utf-8",
+                        dataType: 'JSON',
+                        type: 'POST',
+                        success: function (data) {
+                            if (data.Status === "success") {
+                                if (modalName !== null) {
+                                    $('#' + modalName).modal('hide');
+                                }
+                                $(':input', '#' + formName)
+                                    .not(':button, :submit, :reset, :hidden')
+                                    .val('')
+                                    .prop('checked', false)
+                                    .prop('selectedIndex', 0);
+                                populatingClass();
+                                CustomAlert(actionName, data.Message, data.Status);
+                            } else {
+                                CustomAlert(actionName, data.Message, data.Status);
+                            }
+                        }
+                    });
+
+                } else {
+                    swal("Cancelled", "Your have cancelled :)", "error");
+                }
             });
         }
     </script>
@@ -107,12 +173,12 @@
                     <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="javascript:;">Pages</a></li>
                     <li class="breadcrumb-item text-sm text-dark active" aria-current="page">Dashboard</li>
                 </ol>
-                <h6 class="font-weight-bolder mb-0">Dashboard</h6>
+                <h6 class="font-weight-bolder mb-0">Dashboard </h6>
             </nav>
             <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
                 <div class="ms-md-auto pe-md-3 d-flex align-items-center">
                     <div class="input-group input-group-outline">
-                        <label class="form-label">Type here...</label>
+                        <label class="form-label">Type here.</label>
                         <input type="text" class="form-control">
                     </div>
                 </div>
@@ -304,6 +370,54 @@
                     </div>
                 </div>
             </div>
+            @*START MODAL*@
+            <div id="PatientBookingModal" class="modal fade" role="dialog">
+                <div class="modal-dialog modal-md">
+
+                    <!-- Modal content-->
+                    <div class="modal-content">
+                        <div class="modal-header btn-Ocelot">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title">UPDATE BOOKING STATUS</h4>
+                        </div>
+                        <div class="modal-body">
+                            <form id="scheduleWorkShopForm">
+                                <div class="row">
+                                    <div class="col-md-12">
+
+                                        <div class="row">
+                                            <div class="col-xs-12">
+                                                <div class="row">
+                                                    <div class="col-xs-6">
+                                                        <label for="driverName">CLIENT NAME:</label>
+                                                    </div>
+                                                    <div class="col-xs-10">
+                                                        <div class="input-group date">
+                                                            <div class="input-group-addon">
+                                                                <i class="fa fa-user-circle-o"></i>
+                                                            </div>
+                                                            <input type="hidden" id="mid" />
+                                                            <input type="text" class="form-control" id="clientName" readonly>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div><br />
+                                    </div>
+                                </div>
+
+                            </form>
+
+                        </div>
+                        <div class="modal-footer">
+                            <a class="btn btn-Ocelot" onclick="ClientUpdate()">SUBMIT</a>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            @*END MODAL*@
         </div>
         </div>
         <footer class="footer py-4  ">

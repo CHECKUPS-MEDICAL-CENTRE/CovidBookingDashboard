@@ -46,7 +46,7 @@ namespace CovidBookingDashboard.Controllers
             {
                 patientslist.Add(new OnlinePatientModel
                 {
-                    FirstName = @dr["FirstName"].ToString(),
+                    FirstName = @dr["FirstName"].ToString()+" " + @dr["OtherNames"].ToString() +" "+ @dr["Surname"].ToString(),
                     Surname = @dr["Surname"].ToString(),
                     OtherNames = @dr["OtherNames"].ToString(),
                     Telephone = @dr["Telephone"].ToString(),
@@ -60,6 +60,7 @@ namespace CovidBookingDashboard.Controllers
                     TypeOfTestDescription = dr["TypeOfTestDescription"].ToString(),
                     CollectionLocation = dr["CollectionLocation"].ToString(),
                     DateCreated = Convert.ToDateTime(@dr["DateCreated"]).ToString("MM-dd-yyyy"),
+                    CycleId = Guid.Parse(dr["CycleId"].ToString()),
                 });
             }
 
@@ -76,9 +77,10 @@ namespace CovidBookingDashboard.Controllers
             DataTable dtFiles = GetUsersRegisteredByDateRangeByStatus(StartDate, EndDate, status);
             foreach (DataRow dr in dtFiles.Rows)
             {
+                
                 patientslist.Add(new OnlinePatientModel
                 {
-                    FirstName = @dr["FirstName"].ToString(),
+                    FirstName = @dr["FirstName"].ToString()+ @dr["OtherNames"].ToString()+ @dr["Surname"].ToString(),
                     Surname = @dr["Surname"].ToString(),
                     OtherNames = @dr["OtherNames"].ToString(),
                     Telephone = @dr["Telephone"].ToString(),
@@ -126,7 +128,7 @@ namespace CovidBookingDashboard.Controllers
             con.Open();
             SqlCommand command = new SqlCommand(@"Select * from onlinepatients
     WHERE DateCreated >= dateadd(day, datediff(day, 1, GETDATE()), 0)
-        AND DateCreated < dateadd(day, datediff(day, 0, GETDATE()), 0) ", con);
+        AND DateCreated < dateadd(day, datediff(day, -1, GETDATE()), 0) ", con);
             SqlDataAdapter da = new SqlDataAdapter(command);
             da.Fill(dtData);
             con.Close();
