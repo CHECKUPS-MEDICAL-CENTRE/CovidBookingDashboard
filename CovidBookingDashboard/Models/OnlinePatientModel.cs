@@ -13,7 +13,7 @@ namespace CovidBookingDashboard.Models
         public string FirstName { get; set; }
         public string Surname { get; set; }
         public string OtherNames { get; set; }
-        public DateTime DOB { get; set; }
+        public string DOB { get; set; }
         public string Gender { get; set; }
         public string Nationality { get; set; }
         public string Telephone { get; set; }
@@ -32,7 +32,7 @@ namespace CovidBookingDashboard.Models
         public string Town { get; set; }
         public string Residence { get; set; }
         public string Occupation { get; set; }
-        public DateTime? VisitDate { get; set; }
+        public string VisitDate { get; set; }
         public string PassportId { get; set; }
         public string FlightNumber { get; set; }
         public string CountryTo { get; set; }
@@ -43,6 +43,7 @@ namespace CovidBookingDashboard.Models
         public decimal Amount { get; set; }
         public string Currency { get; set; }
         public string OrderID { get; set; }
+        public string DateCreated { get; set; }
 
         public string VisitTime { get; set; }
         public string MemberNumber { get; set; }
