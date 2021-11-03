@@ -56,6 +56,7 @@ namespace CovidBookingDashboard.Controllers
                     VisitTime = @dr["VisitTime"].ToString(),
                     CollectionSlot = @dr["CollectionSlot"].ToString(),
                     status = Convert.ToInt32(@dr["status"].ToString()),
+                    IsHomeCollection = Convert.ToInt32(@dr["IsHomeCollection"].ToString())
 
                 });
             }
@@ -85,6 +86,7 @@ namespace CovidBookingDashboard.Controllers
                     VisitTime = @dr["VisitTime"].ToString(),
                     CollectionSlot = @dr["CollectionSlot"].ToString(),
                     status= Convert.ToInt32(@dr["status"].ToString()),
+                    IsHomeCollection= Convert.ToInt32(@dr["IsHomeCollection"].ToString())
 
                 });
             }
