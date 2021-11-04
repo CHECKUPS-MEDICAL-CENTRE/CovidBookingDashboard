@@ -200,5 +200,53 @@ where cast(DateCreated as Date) = cast({date} as Date)", con);
             }
                 
         }
+        //booking per day
+        public JsonResult FetchBookingCount(int duration)
+        {
+            // OnlinePatientModel patients = new OnlinePatientModel();
+            List<BookCountVM> patientcount = new List<BookCountVM>();
+            //OnlinePatientModel patients = new OnlinePatientModel();
+            DataTable dtFiles = GetBookingCount(duration);
+            foreach (DataRow dr in dtFiles.Rows)
+            {
+                patientcount.Add(new BookCountVM
+                {
+
+                    DurationIdentifier = @dr["DurationIdentifier"].ToString(),
+                    CountResult = Convert.ToInt32(@dr["CountResult"].ToString()),
+
+                });
+            }
+
+            return Json(patientcount.FirstOrDefault(), JsonRequestBehavior.AllowGet);
+        }
+        private DataTable GetBookingCount(int duration)
+        {
+            string command = "";
+            
+            if (duration == 1)
+            {
+                command = @"Select count(*) as CountResult,'leo' as DurationIdentifier  from onlinepatients
+    WHERE DateCreated >= dateadd(day, datediff(day, 0, GETDATE()), 0)";
+            }
+            else
+            {
+                command = @"Select count(*) as CountResult,'mwezi' as DurationIdentifier  from onlinepatients
+    WHERE DateCreated >= dateadd(MONTH, datediff(MONTH, 0, GETDATE()), 0)
+";
+            }
+            DataTable dtData = new DataTable();
+            SqlConnection con = new SqlConnection(conString);
+            con.Open();
+            SqlCommand commanded = new SqlCommand(command, con);
+            SqlDataAdapter da = new SqlDataAdapter(commanded);
+            da.Fill(dtData);
+            con.Close();
+            return dtData;
+        }
+        //total bookings
+        //booking per collection location
+        //individual or group
+
     }
 }
