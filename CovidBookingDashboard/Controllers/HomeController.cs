@@ -13,6 +13,7 @@ namespace CovidBookingDashboard.Controllers
     {
 
         string conString = "Data Source=CHECKUPSSERVER;Initial Catalog =ZidiDb; User Id=zidiadmin;Password=L90ns!@123";
+        public static string DbConn = "Data Source=CHECKUPSSERVER;Initial Catalog =ZidiDb; User Id=zidiadmin;Password=L90ns!@123";
         //string conString = @"Data Source=DESKTOP-TTKUQJC\SQLEXPRESS;Initial Catalog =ZidiDb;Integrated Security=True";
         public ActionResult Index()
         {
@@ -202,49 +203,90 @@ where cast(DateCreated as Date) = cast({date} as Date)", con);
                 
         }
         //booking per day
-        public JsonResult FetchBookingCount(int duration)
+        public static string FetchBookingCountToday()
         {
-            // OnlinePatientModel patients = new OnlinePatientModel();
-            List<BookCountVM> patientcount = new List<BookCountVM>();
-            //OnlinePatientModel patients = new OnlinePatientModel();
-            DataTable dtFiles = GetBookingCount(duration);
-            foreach (DataRow dr in dtFiles.Rows)
+            string TotalCount = string.Empty;
+            using (SqlConnection con = new SqlConnection(DbConn))
             {
-                patientcount.Add(new BookCountVM
+                using (SqlCommand cmd = new SqlCommand(@"Select count(*) as CountResult,'leo' as DurationIdentifier  from onlinepatients
+    WHERE DateCreated >= dateadd(day, datediff(day, 0, GETDATE()), 0)", con))
                 {
+                    con.Open();
+                    SqlDataReader rdr = cmd.ExecuteReader();
+                    if (rdr.Read())
+                    {
+                        TotalCount = rdr["CountResult"].ToString();
+                    }
 
-                    DurationIdentifier = @dr["DurationIdentifier"].ToString(),
-                    CountResult = Convert.ToInt32(@dr["CountResult"].ToString()),
+                }
 
-                });
             }
-
-            return Json(patientcount.FirstOrDefault(), JsonRequestBehavior.AllowGet);
+            return TotalCount;
         }
-        private DataTable GetBookingCount(int duration)
+        public static string FetchBookingCountThisMonth()
         {
-            string command = "";
-            
-            if (duration == 1)
+            string TotalCount = string.Empty;
+            using (SqlConnection con = new SqlConnection(DbConn))
             {
-                command = @"Select count(*) as CountResult,'leo' as DurationIdentifier  from onlinepatients
-    WHERE DateCreated >= dateadd(day, datediff(day, 0, GETDATE()), 0)";
+                using (SqlCommand cmd = new SqlCommand(@"Select count(*) as CountResult,'mwezi' as DurationIdentifier  from onlinepatients
+    WHERE DateCreated >= dateadd(MONTH, datediff(MONTH, 0, GETDATE()), 0)", con))
+                {
+                    con.Open();
+                    SqlDataReader rdr = cmd.ExecuteReader();
+                    if (rdr.Read())
+                    {
+                        TotalCount = rdr["CountResult"].ToString();
+                    }
+
+                }
+
             }
-            else
-            {
-                command = @"Select count(*) as CountResult,'mwezi' as DurationIdentifier  from onlinepatients
-    WHERE DateCreated >= dateadd(MONTH, datediff(MONTH, 0, GETDATE()), 0)
-";
-            }
-            DataTable dtData = new DataTable();
-            SqlConnection con = new SqlConnection(conString);
-            con.Open();
-            SqlCommand commanded = new SqlCommand(command, con);
-            SqlDataAdapter da = new SqlDataAdapter(commanded);
-            da.Fill(dtData);
-            con.Close();
-            return dtData;
+            return TotalCount;
         }
+        public static string FetchBookingCountHomesampletoday()
+        {
+            string TotalCount = string.Empty;
+            using (SqlConnection con = new SqlConnection(DbConn))
+            {
+                using (SqlCommand cmd = new SqlCommand(@"Select count(*) as CountResult,'leo' as DurationIdentifier  from onlinepatients
+    WHERE DateCreated >= dateadd(day, datediff(day, 0, GETDATE()), 0) and IsHomeCollection=1", con))
+                {
+                    con.Open();
+                    SqlDataReader rdr = cmd.ExecuteReader();
+                    if (rdr.Read())
+                    {
+                        TotalCount = rdr["CountResult"].ToString();
+                    }
+
+                }
+
+            }
+            return TotalCount;
+        }
+        public static string FetchBookingCountwalkinstoday()
+        {
+            string TotalCount = string.Empty;
+            using (SqlConnection con = new SqlConnection(DbConn))
+            {
+                using (SqlCommand cmd = new SqlCommand(@"Select count(*) as CountResult,'leo' as DurationIdentifier  from onlinepatients
+    WHERE DateCreated >= dateadd(day, datediff(day, 0, GETDATE()), 0) and IsHomeCollection=0", con))
+                {
+                    con.Open();
+                    SqlDataReader rdr = cmd.ExecuteReader();
+                    if (rdr.Read())
+                    {
+                        TotalCount = rdr["CountResult"].ToString();
+                    }
+
+                }
+
+            }
+            return TotalCount;
+        }
+        //count of status 1 and list
+        //count month to date
+        //count daily homesamples and list
+        //count walknins and list
         //total bookings
         //booking per collection location
         //individual or group
