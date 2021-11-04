@@ -3,6 +3,7 @@
     ViewBag.Title = "index2";
     Layout = "~/Views/Shared/_Layout2.cshtml";
 }
+@using CovidBookingDashboard.Controllers;
 @section styles {
     <link href="//cdn.datatables.net/1.10.9/css/jquery.dataTables.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css">
@@ -346,7 +347,7 @@
                         </div>
                         <div class="text-end pt-1">
                             <p class="text-sm mb-0 text-capitalize">New Clients</p>
-                            <h4 class="mb-0">53</h4>
+                            <h4 class="mb-0">@HomeController.FetchBookingCountToday()</h4>
                         </div>
                     </div>
                     <hr class="dark horizontal my-0">
@@ -363,7 +364,7 @@
                         </div>
                         <div class="text-end pt-1">
                             <p class="text-sm mb-0 text-capitalize">Month ToDate Clients</p>
-                            <h4 class="mb-0">2,300</h4>
+                            <h4 class="mb-0">@HomeController.FetchBookingCountThisMonth()</h4>
                         </div>
                     </div>
                     <hr class="dark horizontal my-0">
@@ -380,7 +381,7 @@
                         </div>
                         <div class="text-end pt-1">
                             <p class="text-sm mb-0 text-capitalize">HOME SAMPLE</p>
-                            <h4 class="mb-0">3,462</h4>
+                            <h4 class="mb-0">@HomeController.FetchBookingCountHomesampletoday()</h4>
                         </div>
                     </div>
                     <hr class="dark horizontal my-0">
@@ -397,7 +398,7 @@
                         </div>
                         <div class="text-end pt-1">
                             <p class="text-sm mb-0 text-capitalize">WALK-INS</p>
-                            <h4 class="mb-0">103,430</h4>
+                            <h4 class="mb-0">@HomeController.FetchBookingCountwalkinstoday()</h4>
                         </div>
                     </div>
                     <hr class="dark horizontal my-0">
