@@ -14,7 +14,7 @@ namespace CovidBookingDashboard.Controllers
 
         string conString = "Data Source=CHECKUPSSERVER;Initial Catalog =ZidiDb; User Id=zidiadmin;Password=L90ns!@123";
         //string conString = @"Data Source=DESKTOP-TTKUQJC\SQLEXPRESS;Initial Catalog =ZidiDb;Integrated Security=True";
-        public ActionResult Index()
+        public ActionResult Index2()
         {
            // OnlinePatientModel patients = new OnlinePatientModel();
             List<OnlinePatientModel> patientslist = new List<OnlinePatientModel>();
@@ -110,7 +110,28 @@ namespace CovidBookingDashboard.Controllers
             return View();
         }
 
-        public ActionResult Index2()
+        public ActionResult Index()
+        {
+            ViewBag.Message = "Your application description page.";
+
+            return View();
+        }
+
+        public ActionResult homesample()
+        {
+            ViewBag.Message = "Your application description page.";
+
+            return View();
+        }
+
+        public ActionResult walkins()
+        {
+            ViewBag.Message = "Your application description page.";
+
+            return View();
+        }
+
+        public ActionResult newbookings()
         {
             ViewBag.Message = "Your application description page.";
 
