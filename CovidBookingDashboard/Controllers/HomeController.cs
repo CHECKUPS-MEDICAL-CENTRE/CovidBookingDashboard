@@ -11,7 +11,8 @@ namespace CovidBookingDashboard.Controllers
 {
     public class HomeController : Controller
     {
-        string conString = "Data Source=CHECKUPSSERVER;Initial Catalog =ZidiDb; User Id=zidiadmin;Password=L90ns!@123";
+         string conString = "Data Source=CHECKUPSSERVER;Initial Catalog =ZidiDb; User Id=zidiadmin;Password=L90ns!@123";
+        //string conString = @"Data Source=DESKTOP-TTKUQJC\SQLEXPRESS;Initial Catalog =ZidiDb;Integrated Security=True";
         public ActionResult Index()
         {
            // OnlinePatientModel patients = new OnlinePatientModel();
@@ -128,7 +129,7 @@ namespace CovidBookingDashboard.Controllers
             con.Open();
             SqlCommand command = new SqlCommand(@"Select * from onlinepatients
     WHERE DateCreated >= dateadd(day, datediff(day, 1, GETDATE()), 0)
-        AND DateCreated < dateadd(day, datediff(day, -1, GETDATE()), 0) ", con);
+        AND DateCreated < dateadd(day, datediff(day, -1, GETDATE()), 0)  order by DateCreated desc", con);
             SqlDataAdapter da = new SqlDataAdapter(command);
             da.Fill(dtData);
             con.Close();
