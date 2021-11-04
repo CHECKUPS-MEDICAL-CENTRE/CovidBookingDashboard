@@ -104,6 +104,102 @@ namespace CovidBookingDashboard.Controllers
 
             return Json(patientslist, JsonRequestBehavior.AllowGet);
         }
+        public JsonResult getTodaysHomeSampleBookings()
+        {
+
+            // OnlinePatientModel patients = new OnlinePatientModel();
+            List<OnlinePatientModel> patientslist = new List<OnlinePatientModel>();
+            DataTable dtFiles = GetTodaysSamplesList(1);
+            foreach (DataRow dr in dtFiles.Rows)
+            {
+
+                patientslist.Add(new OnlinePatientModel
+                {
+                    FirstName = @dr["FirstName"].ToString() + @dr["OtherNames"].ToString() + @dr["Surname"].ToString(),
+                    Surname = @dr["Surname"].ToString(),
+                    OtherNames = @dr["OtherNames"].ToString(),
+                    Telephone = @dr["Telephone"].ToString(),
+                    Email = @dr["Email"].ToString(),
+                    IdNumber = @dr["IdNumber"].ToString(),
+                    VisitDate = Convert.ToDateTime(@dr["VisitDate"]).ToString("MM-dd-yyyy"),
+                    VisitTime = Convert.ToDateTime(@dr["DateCreated"]).ToString("HH:mm:ss"),
+                    CollectionSlot = @dr["CollectionSlot"].ToString(),
+                    status = Convert.ToInt32(@dr["status"].ToString()),
+                    IsHomeCollection = Convert.ToInt32(@dr["IsHomeCollection"].ToString()),
+                    TypeOfTestDescription = dr["TypeOfTestDescription"].ToString(),
+                    CollectionLocation = dr["CollectionLocation"].ToString(),
+                    DateCreated = Convert.ToDateTime(@dr["DateCreated"]).ToString("MM-dd-yyyy"),
+                    CycleId = Guid.Parse(dr["CycleId"].ToString()),
+
+                });
+            }
+
+            return Json(patientslist, JsonRequestBehavior.AllowGet);
+        }
+        public JsonResult getTodaysWalkinBookings()
+        {
+
+            // OnlinePatientModel patients = new OnlinePatientModel();
+            List<OnlinePatientModel> patientslist = new List<OnlinePatientModel>();
+            DataTable dtFiles = GetTodaysSamplesList(2);
+            foreach (DataRow dr in dtFiles.Rows)
+            {
+
+                patientslist.Add(new OnlinePatientModel
+                {
+                    FirstName = @dr["FirstName"].ToString() + @dr["OtherNames"].ToString() + @dr["Surname"].ToString(),
+                    Surname = @dr["Surname"].ToString(),
+                    OtherNames = @dr["OtherNames"].ToString(),
+                    Telephone = @dr["Telephone"].ToString(),
+                    Email = @dr["Email"].ToString(),
+                    IdNumber = @dr["IdNumber"].ToString(),
+                    VisitDate = Convert.ToDateTime(@dr["VisitDate"]).ToString("MM-dd-yyyy"),
+                    VisitTime = Convert.ToDateTime(@dr["DateCreated"]).ToString("HH:mm:ss"),
+                    CollectionSlot = @dr["CollectionSlot"].ToString(),
+                    status = Convert.ToInt32(@dr["status"].ToString()),
+                    IsHomeCollection = Convert.ToInt32(@dr["IsHomeCollection"].ToString()),
+                    TypeOfTestDescription = dr["TypeOfTestDescription"].ToString(),
+                    CollectionLocation = dr["CollectionLocation"].ToString(),
+                    DateCreated = Convert.ToDateTime(@dr["DateCreated"]).ToString("MM-dd-yyyy"),
+                    CycleId = Guid.Parse(dr["CycleId"].ToString()),
+
+                });
+            }
+
+            return Json(patientslist, JsonRequestBehavior.AllowGet);
+        }
+        public JsonResult getTodaysNewBookings()
+        {
+
+            // OnlinePatientModel patients = new OnlinePatientModel();
+            List<OnlinePatientModel> patientslist = new List<OnlinePatientModel>();
+            DataTable dtFiles = GetTodaysSamplesList(3);
+            foreach (DataRow dr in dtFiles.Rows)
+            {
+
+                patientslist.Add(new OnlinePatientModel
+                {
+                    FirstName = @dr["FirstName"].ToString() + @dr["OtherNames"].ToString() + @dr["Surname"].ToString(),
+                    Surname = @dr["Surname"].ToString(),
+                    OtherNames = @dr["OtherNames"].ToString(),
+                    Telephone = @dr["Telephone"].ToString(),
+                    Email = @dr["Email"].ToString(),
+                    IdNumber = @dr["IdNumber"].ToString(),
+                    VisitDate = Convert.ToDateTime(@dr["VisitDate"]).ToString("MM-dd-yyyy"),
+                    VisitTime = Convert.ToDateTime(@dr["DateCreated"]).ToString("HH:mm:ss"),
+                    CollectionSlot = @dr["CollectionSlot"].ToString(),
+                    status = Convert.ToInt32(@dr["status"].ToString()),
+                    IsHomeCollection = Convert.ToInt32(@dr["IsHomeCollection"].ToString()),
+                    TypeOfTestDescription = dr["TypeOfTestDescription"].ToString(),
+                    CollectionLocation = dr["CollectionLocation"].ToString(),
+                    DateCreated = Convert.ToDateTime(@dr["DateCreated"]).ToString("MM-dd-yyyy"),
+                    CycleId = Guid.Parse(dr["CycleId"].ToString()),
+
+                });
+            }
+
+            return Json(patientslist, JsonRequestBehavior.AllowGet);
+        }
         public ActionResult About()
         {
             ViewBag.Message = "Your application description page.";
@@ -180,6 +276,33 @@ where cast(DateCreated as Date) between  cast({startDate} as Date) and cast({end
 where cast(DateCreated as Date) between  cast({startDate} as Date) and cast({endDate} as Date) and status={1}
 ", con);
             SqlDataAdapter da = new SqlDataAdapter(command);
+            da.Fill(dtData);
+            con.Close();
+            return dtData;
+        }
+        private DataTable GetTodaysSamplesList(int type)
+        {
+            string command = "";
+            if (type == 1)
+            {
+                command = @"Select * from onlinepatients
+    WHERE DateCreated >= dateadd(day, datediff(day, 0, GETDATE()), 0) and IsHomeCollection=1";
+            }
+            else if (type == 2)
+            {
+                command = @"Select * from onlinepatients
+    WHERE DateCreated >= dateadd(day, datediff(day, 0, GETDATE()), 0) and IsHomeCollection=0";
+            }
+            else if (type == 3)
+            {
+                command = @"Select * from onlinepatients
+    WHERE DateCreated >= dateadd(day, datediff(day, 0, GETDATE()), 0) and status=1";
+            }
+            DataTable dtData = new DataTable();
+            SqlConnection con = new SqlConnection(conString);
+            con.Open();
+            SqlCommand cmd = new SqlCommand(command, con);
+            SqlDataAdapter da = new SqlDataAdapter(cmd);
             da.Fill(dtData);
             con.Close();
             return dtData;
