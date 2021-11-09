@@ -51,6 +51,6 @@ namespace CovidBookingDashboard.Models
         public Guid TransactionGroup { get; set; }
         public int IsHomeCollection { get; set; }
         public int status { get; set; }
-        public Guid CycleId { get; set; }
+        public string CycleId { get; set; }
     }
 }

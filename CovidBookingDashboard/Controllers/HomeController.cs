@@ -15,6 +15,7 @@ namespace CovidBookingDashboard.Controllers
         string conString = "Data Source=CHECKUPSSERVER;Initial Catalog =ZidiDb; User Id=zidiadmin;Password=L90ns!@123";
         public static string DbConn = "Data Source=CHECKUPSSERVER;Initial Catalog =ZidiDb; User Id=zidiadmin;Password=L90ns!@123";
         //string conString = @"Data Source=DESKTOP-TTKUQJC\SQLEXPRESS;Initial Catalog =ZidiDb;Integrated Security=True";
+        //public static string DbConn = @"Data Source=DESKTOP-TTKUQJC\SQLEXPRESS;Initial Catalog =ZidiDb;Integrated Security=True";
         public ActionResult Index2()
         {
            // OnlinePatientModel patients = new OnlinePatientModel();
@@ -24,7 +25,7 @@ namespace CovidBookingDashboard.Controllers
             {
                 patientslist.Add(new OnlinePatientModel
                 {
-                    FirstName = @dr["FirstName"].ToString(),
+                    FirstName = @dr["FullName"].ToString(),
                     Surname = @dr["Surname"].ToString(),
                     OtherNames = @dr["OtherNames"].ToString(),
                     Telephone = @dr["Telephone"].ToString(),
@@ -49,7 +50,7 @@ namespace CovidBookingDashboard.Controllers
             {
                 patientslist.Add(new OnlinePatientModel
                 {
-                    FirstName = @dr["FirstName"].ToString()+" " + @dr["OtherNames"].ToString() +" "+ @dr["Surname"].ToString(),
+                    FirstName = @dr["FullName"].ToString(),
                     Surname = @dr["Surname"].ToString(),
                     OtherNames = @dr["OtherNames"].ToString(),
                     Telephone = @dr["Telephone"].ToString(),
@@ -63,7 +64,7 @@ namespace CovidBookingDashboard.Controllers
                     TypeOfTestDescription = dr["TypeOfTestDescription"].ToString(),
                     CollectionLocation = dr["CollectionLocation"].ToString(),
                     DateCreated = Convert.ToDateTime(@dr["DateCreated"]).ToString("MM-dd-yyyy"),
-                    CycleId = Guid.Parse(dr["CycleId"].ToString()),
+                    CycleId = dr["CycleId"].ToString(),
                 });
             }
 
@@ -83,7 +84,7 @@ namespace CovidBookingDashboard.Controllers
                 
                 patientslist.Add(new OnlinePatientModel
                 {
-                    FirstName = @dr["FirstName"].ToString()+ @dr["OtherNames"].ToString()+ @dr["Surname"].ToString(),
+                    FirstName = @dr["FullName"].ToString(),
                     Surname = @dr["Surname"].ToString(),
                     OtherNames = @dr["OtherNames"].ToString(),
                     Telephone = @dr["Telephone"].ToString(),
@@ -97,7 +98,7 @@ namespace CovidBookingDashboard.Controllers
                     TypeOfTestDescription = dr["TypeOfTestDescription"].ToString(),
                     CollectionLocation = dr["CollectionLocation"].ToString(),
                     DateCreated = Convert.ToDateTime(@dr["DateCreated"]).ToString("MM-dd-yyyy"),
-                    CycleId= Guid.Parse( dr["CycleId"].ToString()),
+                    CycleId = dr["CycleId"].ToString(),
 
                 });
             }
@@ -115,7 +116,7 @@ namespace CovidBookingDashboard.Controllers
 
                 patientslist.Add(new OnlinePatientModel
                 {
-                    FirstName = @dr["FirstName"].ToString() + @dr["OtherNames"].ToString() + @dr["Surname"].ToString(),
+                    FirstName = @dr["FullName"].ToString(),
                     Surname = @dr["Surname"].ToString(),
                     OtherNames = @dr["OtherNames"].ToString(),
                     Telephone = @dr["Telephone"].ToString(),
@@ -129,7 +130,7 @@ namespace CovidBookingDashboard.Controllers
                     TypeOfTestDescription = dr["TypeOfTestDescription"].ToString(),
                     CollectionLocation = dr["CollectionLocation"].ToString(),
                     DateCreated = Convert.ToDateTime(@dr["DateCreated"]).ToString("MM-dd-yyyy"),
-                    CycleId = Guid.Parse(dr["CycleId"].ToString()),
+                    CycleId = dr["CycleId"].ToString(),
 
                 });
             }
@@ -147,7 +148,7 @@ namespace CovidBookingDashboard.Controllers
 
                 patientslist.Add(new OnlinePatientModel
                 {
-                    FirstName = @dr["FirstName"].ToString() + @dr["OtherNames"].ToString() + @dr["Surname"].ToString(),
+                    FirstName = @dr["FullName"].ToString(),
                     Surname = @dr["Surname"].ToString(),
                     OtherNames = @dr["OtherNames"].ToString(),
                     Telephone = @dr["Telephone"].ToString(),
@@ -161,7 +162,7 @@ namespace CovidBookingDashboard.Controllers
                     TypeOfTestDescription = dr["TypeOfTestDescription"].ToString(),
                     CollectionLocation = dr["CollectionLocation"].ToString(),
                     DateCreated = Convert.ToDateTime(@dr["DateCreated"]).ToString("MM-dd-yyyy"),
-                    CycleId = Guid.Parse(dr["CycleId"].ToString()),
+                    CycleId = dr["CycleId"].ToString(),
 
                 });
             }
@@ -179,7 +180,7 @@ namespace CovidBookingDashboard.Controllers
 
                 patientslist.Add(new OnlinePatientModel
                 {
-                    FirstName = @dr["FirstName"].ToString() + @dr["OtherNames"].ToString() + @dr["Surname"].ToString(),
+                    FirstName = @dr["FullName"].ToString(),
                     Surname = @dr["Surname"].ToString(),
                     OtherNames = @dr["OtherNames"].ToString(),
                     Telephone = @dr["Telephone"].ToString(),
@@ -193,13 +194,14 @@ namespace CovidBookingDashboard.Controllers
                     TypeOfTestDescription = dr["TypeOfTestDescription"].ToString(),
                     CollectionLocation = dr["CollectionLocation"].ToString(),
                     DateCreated = Convert.ToDateTime(@dr["DateCreated"]).ToString("MM-dd-yyyy"),
-                    CycleId = Guid.Parse(dr["CycleId"].ToString()),
+                    CycleId = dr["CycleId"].ToString(),
 
                 });
             }
 
             return Json(patientslist, JsonRequestBehavior.AllowGet);
         }
+
         public ActionResult About()
         {
             ViewBag.Message = "Your application description page.";
@@ -246,7 +248,16 @@ namespace CovidBookingDashboard.Controllers
             DataTable dtData = new DataTable();
             SqlConnection con = new SqlConnection(conString);
             con.Open();
-            SqlCommand command = new SqlCommand(@"Select * from onlinepatients
+            SqlCommand command = new SqlCommand(@"select 
+isNULL(OnlinePatientId,'')OnlinePatientId,concat(FirstName,' ',Surname,' ',OtherNames)FullName,FirstName,Surname,OtherNames,isNULL(DOB,'')DOB,
+isNULL(Gender,'')Gender,isNULL(Nationality,'')Nationality,isNULL(Telephone,'')Telephone,isNULL(Email,'')Email,
+isNULL(IdNumber,'')IdNumber,isNULL(IsVaccinated,'')IsVaccinated,isNULL(IsDoseComplete,'')IsDoseComplete,isNULL(TestingReason,'')TestingReason,isNULL(TypeOfTest,'')TypeOfTest,
+isNULL(TypeOfTestDescription,'')TypeOfTestDescription,isNULL(PaymentMethod,'')PaymentMethod,
+isNULL(InsuranceId,'')InsuranceId,isNULL(Insurance,'')Insurance,isNULL(SchemeId,'')SchemeId,isNULL(Scheme,'')Scheme,
+isNULL(VisitDate,'')VisitDate,isNULL(CollectionSlot,'')CollectionSlot,	isNULL(CollectionLocation,'')CollectionLocation,
+isNULL(Currency,'KES')Currency,VisitTime,isNULL(MemberNumber,'')MemberNumber,IsNULL(IsSynced,'')IsSynced,DateCreated,isNULL(IsHomeCollection,'')IsHomeCollection,
+isNULL(CycleId,'00000000-0000-0000-0000-000000000000')CycleId,status
+from onlinepatients 
     WHERE DateCreated >= dateadd(day, datediff(day, 1, GETDATE()), 0)
         AND DateCreated < dateadd(day, datediff(day, -1, GETDATE()), 0)  order by DateCreated desc", con);
             SqlDataAdapter da = new SqlDataAdapter(command);
@@ -259,7 +270,16 @@ namespace CovidBookingDashboard.Controllers
             DataTable dtData = new DataTable();
             SqlConnection con = new SqlConnection(conString);
             con.Open();
-            SqlCommand command = new SqlCommand($@"select * from onlinepatients 
+            SqlCommand command = new SqlCommand($@"select 
+isNULL(OnlinePatientId,'')OnlinePatientId,concat(FirstName,' ',Surname,' ',OtherNames)FullName,FirstName,Surname,OtherNames,isNULL(DOB,'')DOB,
+isNULL(Gender,'')Gender,isNULL(Nationality,'')Nationality,isNULL(Telephone,'')Telephone,isNULL(Email,'')Email,
+isNULL(IdNumber,'')IdNumber,isNULL(IsVaccinated,'')IsVaccinated,isNULL(IsDoseComplete,'')IsDoseComplete,isNULL(TestingReason,'')TestingReason,isNULL(TypeOfTest,'')TypeOfTest,
+isNULL(TypeOfTestDescription,'')TypeOfTestDescription,isNULL(PaymentMethod,'')PaymentMethod,
+isNULL(InsuranceId,'')InsuranceId,isNULL(Insurance,'')Insurance,isNULL(SchemeId,'')SchemeId,isNULL(Scheme,'')Scheme,
+isNULL(VisitDate,'')VisitDate,isNULL(CollectionSlot,'')CollectionSlot,	isNULL(CollectionLocation,'')CollectionLocation,
+isNULL(Currency,'KES')Currency,VisitTime,isNULL(MemberNumber,'')MemberNumber,IsNULL(IsSynced,'')IsSynced,DateCreated,isNULL(IsHomeCollection,'')IsHomeCollection,
+isNULL(CycleId,'00000000-0000-0000-0000-000000000000')CycleId,status
+from onlinepatients 
 where cast(DateCreated as Date) between  cast({startDate} as Date) and cast({endDate} as Date)
 ", con);
             SqlDataAdapter da = new SqlDataAdapter(command);
@@ -272,7 +292,16 @@ where cast(DateCreated as Date) between  cast({startDate} as Date) and cast({end
             DataTable dtData = new DataTable();
             SqlConnection con = new SqlConnection(conString);
             con.Open();
-            SqlCommand command = new SqlCommand($@"select * from onlinepatients 
+            SqlCommand command = new SqlCommand($@"select 
+isNULL(OnlinePatientId,'')OnlinePatientId,concat(FirstName,' ',Surname,' ',OtherNames)FullName,FirstName,Surname,OtherNames,isNULL(DOB,'')DOB,
+isNULL(Gender,'')Gender,isNULL(Nationality,'')Nationality,isNULL(Telephone,'')Telephone,isNULL(Email,'')Email,
+isNULL(IdNumber,'')IdNumber,isNULL(IsVaccinated,'')IsVaccinated,isNULL(IsDoseComplete,'')IsDoseComplete,isNULL(TestingReason,'')TestingReason,isNULL(TypeOfTest,'')TypeOfTest,
+isNULL(TypeOfTestDescription,'')TypeOfTestDescription,isNULL(PaymentMethod,'')PaymentMethod,
+isNULL(InsuranceId,'')InsuranceId,isNULL(Insurance,'')Insurance,isNULL(SchemeId,'')SchemeId,isNULL(Scheme,'')Scheme,
+isNULL(VisitDate,'')VisitDate,isNULL(CollectionSlot,'')CollectionSlot,	isNULL(CollectionLocation,'')CollectionLocation,
+isNULL(Currency,'KES')Currency,VisitTime,isNULL(MemberNumber,'')MemberNumber,IsNULL(IsSynced,'')IsSynced,DateCreated,isNULL(IsHomeCollection,'')IsHomeCollection,
+isNULL(CycleId,'00000000-0000-0000-0000-000000000000')CycleId,status
+from onlinepatients
 where cast(DateCreated as Date) between  cast({startDate} as Date) and cast({endDate} as Date) and status={1}
 ", con);
             SqlDataAdapter da = new SqlDataAdapter(command);
@@ -285,17 +314,44 @@ where cast(DateCreated as Date) between  cast({startDate} as Date) and cast({end
             string command = "";
             if (type == 1)
             {
-                command = @"Select * from onlinepatients
+                command = @"select 
+isNULL(OnlinePatientId,'')OnlinePatientId,concat(FirstName,' ',Surname,' ',OtherNames)FullName,FirstName,Surname,OtherNames,isNULL(DOB,'')DOB,
+isNULL(Gender,'')Gender,isNULL(Nationality,'')Nationality,isNULL(Telephone,'')Telephone,isNULL(Email,'')Email,
+isNULL(IdNumber,'')IdNumber,isNULL(IsVaccinated,'')IsVaccinated,isNULL(IsDoseComplete,'')IsDoseComplete,isNULL(TestingReason,'')TestingReason,isNULL(TypeOfTest,'')TypeOfTest,
+isNULL(TypeOfTestDescription,'')TypeOfTestDescription,isNULL(PaymentMethod,'')PaymentMethod,
+isNULL(InsuranceId,'')InsuranceId,isNULL(Insurance,'')Insurance,isNULL(SchemeId,'')SchemeId,isNULL(Scheme,'')Scheme,
+isNULL(VisitDate,'')VisitDate,isNULL(CollectionSlot,'')CollectionSlot,	isNULL(CollectionLocation,'')CollectionLocation,
+isNULL(Currency,'KES')Currency,VisitTime,isNULL(MemberNumber,'')MemberNumber,IsNULL(IsSynced,'')IsSynced,DateCreated,isNULL(IsHomeCollection,'')IsHomeCollection,
+isNULL(CycleId,'00000000-0000-0000-0000-000000000000')CycleId,status
+from onlinepatients
     WHERE DateCreated >= dateadd(day, datediff(day, 0, GETDATE()), 0) and IsHomeCollection=1";
             }
             else if (type == 2)
             {
-                command = @"Select * from onlinepatients
+                command = @"select 
+isNULL(OnlinePatientId,'')OnlinePatientId,concat(FirstName,' ',Surname,' ',OtherNames)FullName,FirstName,Surname,OtherNames,isNULL(DOB,'')DOB,
+isNULL(Gender,'')Gender,isNULL(Nationality,'')Nationality,isNULL(Telephone,'')Telephone,isNULL(Email,'')Email,
+isNULL(IdNumber,'')IdNumber,isNULL(IsVaccinated,'')IsVaccinated,isNULL(IsDoseComplete,'')IsDoseComplete,isNULL(TestingReason,'')TestingReason,isNULL(TypeOfTest,'')TypeOfTest,
+isNULL(TypeOfTestDescription,'')TypeOfTestDescription,isNULL(PaymentMethod,'')PaymentMethod,
+isNULL(InsuranceId,'')InsuranceId,isNULL(Insurance,'')Insurance,isNULL(SchemeId,'')SchemeId,isNULL(Scheme,'')Scheme,
+isNULL(VisitDate,'')VisitDate,isNULL(CollectionSlot,'')CollectionSlot,	isNULL(CollectionLocation,'')CollectionLocation,
+isNULL(Currency,'KES')Currency,VisitTime,isNULL(MemberNumber,'')MemberNumber,IsNULL(IsSynced,'')IsSynced,DateCreated,isNULL(IsHomeCollection,'')IsHomeCollection,
+isNULL(CycleId,'00000000-0000-0000-0000-000000000000')CycleId,status
+from onlinepatients
     WHERE DateCreated >= dateadd(day, datediff(day, 0, GETDATE()), 0) and IsHomeCollection=0";
             }
             else if (type == 3)
             {
-                command = @"Select * from onlinepatients
+                command = @"select 
+isNULL(OnlinePatientId,'')OnlinePatientId,concat(FirstName,' ',Surname,' ',OtherNames)FullName,FirstName,Surname,OtherNames,isNULL(DOB,'')DOB,
+isNULL(Gender,'')Gender,isNULL(Nationality,'')Nationality,isNULL(Telephone,'')Telephone,isNULL(Email,'')Email,
+isNULL(IdNumber,'')IdNumber,isNULL(IsVaccinated,'')IsVaccinated,isNULL(IsDoseComplete,'')IsDoseComplete,isNULL(TestingReason,'')TestingReason,isNULL(TypeOfTest,'')TypeOfTest,
+isNULL(TypeOfTestDescription,'')TypeOfTestDescription,isNULL(PaymentMethod,'')PaymentMethod,
+isNULL(InsuranceId,'')InsuranceId,isNULL(Insurance,'')Insurance,isNULL(SchemeId,'')SchemeId,isNULL(Scheme,'')Scheme,
+isNULL(VisitDate,'')VisitDate,isNULL(CollectionSlot,'')CollectionSlot,	isNULL(CollectionLocation,'')CollectionLocation,
+isNULL(Currency,'KES')Currency,VisitTime,isNULL(MemberNumber,'')MemberNumber,IsNULL(IsSynced,'')IsSynced,DateCreated,isNULL(IsHomeCollection,'')IsHomeCollection,
+isNULL(CycleId,'00000000-0000-0000-0000-000000000000')CycleId,status
+from onlinepatients
     WHERE DateCreated >= dateadd(day, datediff(day, 0, GETDATE()), 0) and status=1";
             }
             DataTable dtData = new DataTable();
@@ -312,7 +368,16 @@ where cast(DateCreated as Date) between  cast({startDate} as Date) and cast({end
             DataTable dtData = new DataTable();
             SqlConnection con = new SqlConnection(conString);
             con.Open();
-            SqlCommand command = new SqlCommand($@"select * from onlinepatients 
+            SqlCommand command = new SqlCommand($@"select 
+isNULL(OnlinePatientId,'')OnlinePatientId,concat(FirstName,' ',Surname,' ',OtherNames)FullName,FirstName,Surname,OtherNames,isNULL(DOB,'')DOB,
+isNULL(Gender,'')Gender,isNULL(Nationality,'')Nationality,isNULL(Telephone,'')Telephone,isNULL(Email,'')Email,
+isNULL(IdNumber,'')IdNumber,isNULL(IsVaccinated,'')IsVaccinated,isNULL(IsDoseComplete,'')IsDoseComplete,isNULL(TestingReason,'')TestingReason,isNULL(TypeOfTest,'')TypeOfTest,
+isNULL(TypeOfTestDescription,'')TypeOfTestDescription,isNULL(PaymentMethod,'')PaymentMethod,
+isNULL(InsuranceId,'')InsuranceId,isNULL(Insurance,'')Insurance,isNULL(SchemeId,'')SchemeId,isNULL(Scheme,'')Scheme,
+isNULL(VisitDate,'')VisitDate,isNULL(CollectionSlot,'')CollectionSlot,	isNULL(CollectionLocation,'')CollectionLocation,
+isNULL(Currency,'KES')Currency,VisitTime,isNULL(MemberNumber,'')MemberNumber,IsNULL(IsSynced,'')IsSynced,DateCreated,isNULL(IsHomeCollection,'')IsHomeCollection,
+isNULL(CycleId,'00000000-0000-0000-0000-000000000000')CycleId,status
+from onlinepatients
 where cast(DateCreated as Date) = cast({date} as Date)", con);
             SqlDataAdapter da = new SqlDataAdapter(command);
             da.Fill(dtData);
@@ -347,7 +412,7 @@ where cast(DateCreated as Date) = cast({date} as Date)", con);
                 
         }
         //booking per day
-        public static string FetchBookingCountToday()
+        public JsonResult FetchBookingCountToday()
         {
             string TotalCount = string.Empty;
             using (SqlConnection con = new SqlConnection(DbConn))
@@ -365,9 +430,9 @@ where cast(DateCreated as Date) = cast({date} as Date)", con);
                 }
 
             }
-            return TotalCount;
+            return Json(TotalCount, JsonRequestBehavior.AllowGet);
         }
-        public static string FetchBookingCountThisMonth()
+        public JsonResult FetchBookingCountThisMonth()
         {
             string TotalCount = string.Empty;
             using (SqlConnection con = new SqlConnection(DbConn))
@@ -385,9 +450,9 @@ where cast(DateCreated as Date) = cast({date} as Date)", con);
                 }
 
             }
-            return TotalCount;
+            return Json(TotalCount, JsonRequestBehavior.AllowGet);
         }
-        public static string FetchBookingCountHomesampletoday()
+        public JsonResult FetchBookingCountHomesampletoday()
         {
             string TotalCount = string.Empty;
             using (SqlConnection con = new SqlConnection(DbConn))
@@ -405,9 +470,9 @@ where cast(DateCreated as Date) = cast({date} as Date)", con);
                 }
 
             }
-            return TotalCount;
+            return Json(TotalCount, JsonRequestBehavior.AllowGet);
         }
-        public static string FetchBookingCountwalkinstoday()
+        public JsonResult FetchBookingCountwalkinstoday()
         {
             string TotalCount = string.Empty;
             using (SqlConnection con = new SqlConnection(DbConn))
@@ -425,7 +490,7 @@ where cast(DateCreated as Date) = cast({date} as Date)", con);
                 }
 
             }
-            return TotalCount;
+            return Json(TotalCount, JsonRequestBehavior.AllowGet);
         }
         //count of status 1 and list
         //count month to date
