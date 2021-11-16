@@ -44,7 +44,6 @@ namespace CovidBookingDashboard.Models
         public string Currency { get; set; }
         public string OrderID { get; set; }
         public string DateCreated { get; set; }
-
         public string VisitTime { get; set; }
         public string MemberNumber { get; set; }
         public string Airline { get; set; }
@@ -52,5 +51,6 @@ namespace CovidBookingDashboard.Models
         public int IsHomeCollection { get; set; }
         public int status { get; set; }
         public string CycleId { get; set; }
+        public int isWhatsAppSent { get; set; }
     }
 }

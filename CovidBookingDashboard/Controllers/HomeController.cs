@@ -34,6 +34,7 @@ namespace CovidBookingDashboard.Controllers
                     VisitDate = Convert.ToDateTime(@dr["VisitDate"]).ToString(),
                     VisitTime = Convert.ToDateTime(@dr["DateCreated"]).ToString(),
                     CollectionSlot = @dr["CollectionSlot"].ToString(),
+                    isWhatsAppSent = Convert.ToInt32(@dr["IsWhatsappSent"].ToString()),
 
                 });
             }
@@ -65,6 +66,37 @@ namespace CovidBookingDashboard.Controllers
                     CollectionLocation = dr["CollectionLocation"].ToString(),
                     DateCreated = Convert.ToDateTime(@dr["DateCreated"]).ToString("MM-dd-yyyy"),
                     CycleId = dr["CycleId"].ToString(),
+                    isWhatsAppSent = Convert.ToInt32(@dr["IsWhatsappSent"].ToString()),
+                });
+            }
+
+            return Json(patientslist, JsonRequestBehavior.AllowGet);
+        }
+        public JsonResult getVisits(DateTime startDate, DateTime endDate)
+        {
+            // OnlinePatientModel patients = new OnlinePatientModel();
+            List<OnlinePatientModel> patientslist = new List<OnlinePatientModel>();
+            DataTable dtFiles = GetVisitsByDateRange(startDate, endDate);
+            foreach (DataRow dr in dtFiles.Rows)
+            {
+                //cycle_id	FullName	cycle_created_time	IsWhatsappSent	lab_test_desc	gender	id_no	email	nationality	channel	PhoneNumber	PaymentMethod	CollectionLocation	IsHomeCollection	status
+
+                patientslist.Add(new OnlinePatientModel
+                {
+                    FirstName = @dr["FullName"].ToString(),
+                    Telephone = @dr["PhoneNumber"].ToString(),
+                    Email = @dr["email"].ToString(),
+                    IdNumber = @dr["id_no"].ToString(),
+                    VisitDate = Convert.ToDateTime(@dr["cycle_created_time"]).ToString("MM-dd-yyyy"),
+                    VisitTime = Convert.ToDateTime(@dr["cycle_created_time"]).ToString("HH:mm:ss"),
+                    //CollectionSlot = @dr["CollectionSlot"].ToString(),
+                    status = Convert.ToInt32(@dr["status"].ToString()),
+                    //IsHomeCollection = Convert.ToInt32(@dr["IsHomeCollection"].ToString()),
+                    TypeOfTestDescription = dr["lab_test_desc"].ToString(),
+                    //CollectionLocation = dr["CollectionLocation"].ToString(),
+                    DateCreated = Convert.ToDateTime(@dr["DateCreated"]).ToString("MM-dd-yyyy"),
+                    CycleId = dr["cycle_id"].ToString(),
+                    isWhatsAppSent = Convert.ToInt32(@dr["IsWhatsappSent"].ToString()),
                 });
             }
 
@@ -99,6 +131,7 @@ namespace CovidBookingDashboard.Controllers
                     CollectionLocation = dr["CollectionLocation"].ToString(),
                     DateCreated = Convert.ToDateTime(@dr["DateCreated"]).ToString("MM-dd-yyyy"),
                     CycleId = dr["CycleId"].ToString(),
+                    isWhatsAppSent = Convert.ToInt32(@dr["IsWhatsappSent"].ToString()),
 
                 });
             }
@@ -131,6 +164,7 @@ namespace CovidBookingDashboard.Controllers
                     CollectionLocation = dr["CollectionLocation"].ToString(),
                     DateCreated = Convert.ToDateTime(@dr["DateCreated"]).ToString("MM-dd-yyyy"),
                     CycleId = dr["CycleId"].ToString(),
+                    isWhatsAppSent = Convert.ToInt32(@dr["IsWhatsappSent"].ToString()),
 
                 });
             }
@@ -163,6 +197,7 @@ namespace CovidBookingDashboard.Controllers
                     CollectionLocation = dr["CollectionLocation"].ToString(),
                     DateCreated = Convert.ToDateTime(@dr["DateCreated"]).ToString("MM-dd-yyyy"),
                     CycleId = dr["CycleId"].ToString(),
+                    isWhatsAppSent = Convert.ToInt32(@dr["IsWhatsappSent"].ToString()),
 
                 });
             }
@@ -195,6 +230,7 @@ namespace CovidBookingDashboard.Controllers
                     CollectionLocation = dr["CollectionLocation"].ToString(),
                     DateCreated = Convert.ToDateTime(@dr["DateCreated"]).ToString("MM-dd-yyyy"),
                     CycleId = dr["CycleId"].ToString(),
+                    isWhatsAppSent = Convert.ToInt32(@dr["IsWhatsappSent"].ToString()),
 
                 });
             }
@@ -216,6 +252,12 @@ namespace CovidBookingDashboard.Controllers
             return View();
         }
 
+        public ActionResult dashboard()
+        {
+            ViewBag.Message = "Your application description page.";
+
+            return View();
+        }
         public ActionResult homesample()
         {
             ViewBag.Message = "Your application description page.";
@@ -256,8 +298,9 @@ isNULL(TypeOfTestDescription,'')TypeOfTestDescription,isNULL(PaymentMethod,'')Pa
 isNULL(InsuranceId,'')InsuranceId,isNULL(Insurance,'')Insurance,isNULL(SchemeId,'')SchemeId,isNULL(Scheme,'')Scheme,
 isNULL(VisitDate,'')VisitDate,isNULL(CollectionSlot,'')CollectionSlot,	isNULL(CollectionLocation,'')CollectionLocation,
 isNULL(Currency,'KES')Currency,VisitTime,isNULL(MemberNumber,'')MemberNumber,IsNULL(IsSynced,'')IsSynced,DateCreated,isNULL(IsHomeCollection,'')IsHomeCollection,
-isNULL(CycleId,'00000000-0000-0000-0000-000000000000')CycleId,status
-from onlinepatients 
+isNULL(CycleId,'00000000-0000-0000-0000-000000000000')CycleId,status,isNULL(j.IsWhatsappSent,'2')IsWhatsappSent
+from onlinepatients o 
+left join ( select * from DocumentsLog where  document_type='covid_cert')j on j.cycle_id=o.CycleId
     WHERE DateCreated >= dateadd(day, datediff(day, 1, GETDATE()), 0)
         AND DateCreated < dateadd(day, datediff(day, -1, GETDATE()), 0)  order by DateCreated desc", con);
             SqlDataAdapter da = new SqlDataAdapter(command);
@@ -278,8 +321,9 @@ isNULL(TypeOfTestDescription,'')TypeOfTestDescription,isNULL(PaymentMethod,'')Pa
 isNULL(InsuranceId,'')InsuranceId,isNULL(Insurance,'')Insurance,isNULL(SchemeId,'')SchemeId,isNULL(Scheme,'')Scheme,
 isNULL(VisitDate,'')VisitDate,isNULL(CollectionSlot,'')CollectionSlot,	isNULL(CollectionLocation,'')CollectionLocation,
 isNULL(Currency,'KES')Currency,VisitTime,isNULL(MemberNumber,'')MemberNumber,IsNULL(IsSynced,'')IsSynced,DateCreated,isNULL(IsHomeCollection,'')IsHomeCollection,
-isNULL(CycleId,'00000000-0000-0000-0000-000000000000')CycleId,status
-from onlinepatients 
+isNULL(CycleId,'00000000-0000-0000-0000-000000000000')CycleId,status,isNULL(j.IsWhatsappSent,'2')IsWhatsappSent
+from onlinepatients o 
+left join ( select * from DocumentsLog where  document_type='covid_cert')j on j.cycle_id=o.CycleId
 where cast(DateCreated as Date) between  cast({startDate} as Date) and cast({endDate} as Date)
 ", con);
             SqlDataAdapter da = new SqlDataAdapter(command);
@@ -287,6 +331,32 @@ where cast(DateCreated as Date) between  cast({startDate} as Date) and cast({end
             con.Close();
             return dtData;
         }
+
+
+        private DataTable GetVisitsByDateRange(DateTime startDate, DateTime endDate)
+        {
+            DataTable dtData = new DataTable();
+            SqlConnection con = new SqlConnection(conString);
+            con.Open();
+            SqlCommand command = new SqlCommand($@"select  vc.cycle_id, (PR.patient_first_name+' '+ pr.patient_middle_name +' '+ PR.patient_last_name) AS FullName, vc.cycle_created_time,
+            dl.IsWhatsappSent,lab_test_desc, pr.gender, id_no, pr.email, pr.nationality, channel,
+            pr.patient_tel as PhoneNumber,op.PaymentMethod,op.CollectionLocation,op.IsHomeCollection,vc.status,cast(pr.Date as date)DateCreated
+            from visit_cycle VC
+            left JOIN DocumentsLog dl ON VC.cycle_id= dl.cycle_id
+            inner join patient_registration pr on pr.patient_id=vc.patient_id
+            left join (select cycle_id,max(lab_test_desc)lab_test_desc from test_results ts inner join lab_test lt on ts.lab_test_id=lt.lab_test_id
+            group by cycle_id
+            )r on r.cycle_id=vc.cycle_id
+            left join onlinepatients op on op.CycleId=vc.cycle_id
+            where document_type='covid_cert' and cast(vc.cycle_created_time as date) between cast('{startDate}' as date) and cast('{endDate}' as date)
+            order by cycle_created_time desc
+            ", con);
+                        SqlDataAdapter da = new SqlDataAdapter(command);
+                        da.Fill(dtData);
+                        con.Close();
+            return dtData;
+        }
+
         private DataTable GetUsersRegisteredByDateRangeByStatus(DateTime startDate, DateTime endDate, int status)
         {
             DataTable dtData = new DataTable();
@@ -300,8 +370,9 @@ isNULL(TypeOfTestDescription,'')TypeOfTestDescription,isNULL(PaymentMethod,'')Pa
 isNULL(InsuranceId,'')InsuranceId,isNULL(Insurance,'')Insurance,isNULL(SchemeId,'')SchemeId,isNULL(Scheme,'')Scheme,
 isNULL(VisitDate,'')VisitDate,isNULL(CollectionSlot,'')CollectionSlot,	isNULL(CollectionLocation,'')CollectionLocation,
 isNULL(Currency,'KES')Currency,VisitTime,isNULL(MemberNumber,'')MemberNumber,IsNULL(IsSynced,'')IsSynced,DateCreated,isNULL(IsHomeCollection,'')IsHomeCollection,
-isNULL(CycleId,'00000000-0000-0000-0000-000000000000')CycleId,status
-from onlinepatients
+isNULL(CycleId,'00000000-0000-0000-0000-000000000000')CycleId,status,isNULL(j.IsWhatsappSent,'2')IsWhatsappSent
+from onlinepatients o 
+left join ( select * from DocumentsLog where  document_type='covid_cert')j on j.cycle_id=o.CycleId
 where cast(DateCreated as Date) between  cast({startDate} as Date) and cast({endDate} as Date) and status={1}
 ", con);
             SqlDataAdapter da = new SqlDataAdapter(command);
@@ -322,8 +393,9 @@ isNULL(TypeOfTestDescription,'')TypeOfTestDescription,isNULL(PaymentMethod,'')Pa
 isNULL(InsuranceId,'')InsuranceId,isNULL(Insurance,'')Insurance,isNULL(SchemeId,'')SchemeId,isNULL(Scheme,'')Scheme,
 isNULL(VisitDate,'')VisitDate,isNULL(CollectionSlot,'')CollectionSlot,	isNULL(CollectionLocation,'')CollectionLocation,
 isNULL(Currency,'KES')Currency,VisitTime,isNULL(MemberNumber,'')MemberNumber,IsNULL(IsSynced,'')IsSynced,DateCreated,isNULL(IsHomeCollection,'')IsHomeCollection,
-isNULL(CycleId,'00000000-0000-0000-0000-000000000000')CycleId,status
-from onlinepatients
+isNULL(CycleId,'00000000-0000-0000-0000-000000000000')CycleId,status,isNULL(j.IsWhatsappSent,'2')IsWhatsappSent
+from onlinepatients o 
+left join ( select * from DocumentsLog where  document_type='covid_cert')j on j.cycle_id=o.CycleId
     WHERE DateCreated >= dateadd(day, datediff(day, 0, GETDATE()), 0) and IsHomeCollection=1";
             }
             else if (type == 2)
@@ -336,8 +408,9 @@ isNULL(TypeOfTestDescription,'')TypeOfTestDescription,isNULL(PaymentMethod,'')Pa
 isNULL(InsuranceId,'')InsuranceId,isNULL(Insurance,'')Insurance,isNULL(SchemeId,'')SchemeId,isNULL(Scheme,'')Scheme,
 isNULL(VisitDate,'')VisitDate,isNULL(CollectionSlot,'')CollectionSlot,	isNULL(CollectionLocation,'')CollectionLocation,
 isNULL(Currency,'KES')Currency,VisitTime,isNULL(MemberNumber,'')MemberNumber,IsNULL(IsSynced,'')IsSynced,DateCreated,isNULL(IsHomeCollection,'')IsHomeCollection,
-isNULL(CycleId,'00000000-0000-0000-0000-000000000000')CycleId,status
-from onlinepatients
+isNULL(CycleId,'00000000-0000-0000-0000-000000000000')CycleId,status,isNULL(j.IsWhatsappSent,'2')IsWhatsappSent
+from onlinepatients o 
+left join ( select * from DocumentsLog where  document_type='covid_cert')j on j.cycle_id=o.CycleId
     WHERE DateCreated >= dateadd(day, datediff(day, 0, GETDATE()), 0) and IsHomeCollection=0";
             }
             else if (type == 3)
@@ -350,8 +423,9 @@ isNULL(TypeOfTestDescription,'')TypeOfTestDescription,isNULL(PaymentMethod,'')Pa
 isNULL(InsuranceId,'')InsuranceId,isNULL(Insurance,'')Insurance,isNULL(SchemeId,'')SchemeId,isNULL(Scheme,'')Scheme,
 isNULL(VisitDate,'')VisitDate,isNULL(CollectionSlot,'')CollectionSlot,	isNULL(CollectionLocation,'')CollectionLocation,
 isNULL(Currency,'KES')Currency,VisitTime,isNULL(MemberNumber,'')MemberNumber,IsNULL(IsSynced,'')IsSynced,DateCreated,isNULL(IsHomeCollection,'')IsHomeCollection,
-isNULL(CycleId,'00000000-0000-0000-0000-000000000000')CycleId,status
-from onlinepatients
+isNULL(CycleId,'00000000-0000-0000-0000-000000000000')CycleId,status,isNULL(j.IsWhatsappSent,'2')IsWhatsappSent
+from onlinepatients o 
+left join ( select * from DocumentsLog where  document_type='covid_cert')j on j.cycle_id=o.CycleId
     WHERE DateCreated >= dateadd(day, datediff(day, 0, GETDATE()), 0) and status=1";
             }
             DataTable dtData = new DataTable();
@@ -376,8 +450,9 @@ isNULL(TypeOfTestDescription,'')TypeOfTestDescription,isNULL(PaymentMethod,'')Pa
 isNULL(InsuranceId,'')InsuranceId,isNULL(Insurance,'')Insurance,isNULL(SchemeId,'')SchemeId,isNULL(Scheme,'')Scheme,
 isNULL(VisitDate,'')VisitDate,isNULL(CollectionSlot,'')CollectionSlot,	isNULL(CollectionLocation,'')CollectionLocation,
 isNULL(Currency,'KES')Currency,VisitTime,isNULL(MemberNumber,'')MemberNumber,IsNULL(IsSynced,'')IsSynced,DateCreated,isNULL(IsHomeCollection,'')IsHomeCollection,
-isNULL(CycleId,'00000000-0000-0000-0000-000000000000')CycleId,status
-from onlinepatients
+isNULL(CycleId,'00000000-0000-0000-0000-000000000000')CycleId,status,isNULL(j.IsWhatsappSent,'2')IsWhatsappSent
+from onlinepatients o 
+left join ( select * from DocumentsLog where  document_type='covid_cert')j on j.cycle_id=o.CycleId
 where cast(DateCreated as Date) = cast({date} as Date)", con);
             SqlDataAdapter da = new SqlDataAdapter(command);
             da.Fill(dtData);

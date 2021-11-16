@@ -12,7 +12,7 @@
     {
     <script type="text/javascript"
             charset="utf8"
-            src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.8.2.min.js"></script>
+            src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.9.1.min.js"></script>
     <script src="//cdn.datatables.net/1.10.9/js/jquery.dataTables.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script>
     <script>
@@ -24,7 +24,7 @@
             FetchBookingCountwalkinstoday();
             FetchBookingCountThisMonth();
             setInterval(function () {
-              /*  $('#patientsTables').load(fetchBookings());*/
+                /*  $('#patientsTables').load(fetchBookings());*/
                 $('newClients').load(FetchBookingCountToday());
                 $('HomeSample').load(FetchBookingCountHomesampletoday());
                 $('WalkIns').load(FetchBookingCountwalkinstoday());
@@ -117,11 +117,58 @@
                     'excel', 'pdf', 'print'
                 ],
                 columns: [
+                    {
+                        title: "Actions", data: null, render: function (data, type, row) {
+                            if (data.status === 1) {
+                                if (type === 'display') {
+                                    dt = '<center><a class="btn btn-primary " onclick="updateBooking(\'' + data.CycleId + '\',\'' + data.status + '\')">CONFIRM</a></center>';
+                                }
+                            } else if (data.status === 2 && data.IsHomeCollection === 1) {
+                                if (type === 'display') {
+                                    dt = '<center><a class="btn btn-primary " onclick="updateBooking(\'' + data.CycleId + '\',\'' + data.status + '\')">Scheduled</a></center>';
+                                }
+                            }
+                            else if (data.status === 3) {
+                                if (type === 'display') {
+                                    dt = '<center><a class="btn btn-primary " onclick="updateBooking(\'' + data.CycleId + ',' + data.status + '\')">Collected</a></center>';
+                                }
+                            } else if (data.status === 4) {
+                                if (type === 'display') {
+                                    dt = '<div class="dropdown ">'
+                                        + '<button class="fa fa-list btn btn-primary dropdown-toggle " type="button" data-toggle="dropdown" ">'
+                                        + '<span class="caret"></span></button>'
+                                        + '<ul class="dropdown-menu">'
+                                        + '<li><a onclick="ViewCertificate(\'' + data.CycleId + '\')">View Certificate</a></li>'
+                                        + '<li><a onclick="SendWhatsAPP(\'' + data.CycleId + '\')">SendWhatsApp</a></li>'
+                                        + '<li><a onclick="SendEmail(\'' + data.CycleId + '\')">Send Email</a></li>'
+                                        + '</ul>'
+                                        + '</div>';
+                                }
+
+                            }
+                            else if (data.status === 5) {
+                                if (type === 'display') {
+                                    dt = '<div class="dropdown ">'
+                                        + '<button class="fa fa-list btn btn-primary dropdown-toggle " type="button" data-toggle="dropdown" ">'
+                                        + '<span class="caret"></span></button>'
+                                        + '<ul class="dropdown-menu">'
+                                        + '<li><a onclick="ViewCertificate(\'' + data.CycleId + '\')">View Certificate</a></li>'
+                                        + '<li><a onclick="SendWhatsAPP(\'' + data.CycleId + '\')">Resend WhatsApp</a></li>'
+                                        + '<li><a onclick="SendEmail(\'' + data.CycleId + '\')">Resend Email</a></li>'
+                                        + '</ul>'
+                                        + '</div>';
+                                }
+                            }
+                            return dt
+                        },
+                        className: "dt-body-center"
+                    },
                     { title: "Client Name", data: "FirstName" },
                     { title: "PhoneNumber", data: "Telephone" },
                     { title: "Booking Date", data: "DateCreated" },
                     { title: "Booking Time", data: "VisitTime" },
-                    { title: "Location", data: "CollectionLocation" },
+                    { title: "Collection Location", data: "CollectionLocation" },
+                    /* { title: "CycleId", data: "CycleId" },*/
                     { title: "Visit Date", data: "VisitDate" },
                     {
                         title: "Status", data: null, render: function (data, type, row) {
@@ -131,42 +178,17 @@
                             else if (data.status === 2) {
                                 return '<span class="label label-default">Confirmed</span>';
                             }
-                            else if (data.Status === 3) {
+                            else if (data.status === 3) {
                                 return '<span class="label label-success">Sample Collected</span>';
-                            } else if (data.Status === 4) {
-                                return '<span class="label label-warning">Has Result</span>';
-                            } else if (data.Status === 5) {
+                            } else if (data.status === 4) {
+                                return '<span class="label label-success">Has Results</span>';
+                            } else if (data.status === 5) {
                                 return '<span class="label label-info">Completed</span>';
                             }
 
                         }
                     },
-                    {
-                        title: "Actions", data: null, render: function (data, type, row) {
 
-                            if (data.status === 1) {
-                                // if (type === 'display') {
-                                return '<center><a class="btn btn-primary " onclick="updateBooking(\'' + data.CycleId + '\',\'' + data.status + '\')">CONFIRM</a></center>';
-                                // }
-                            } else if (data.status === 2 && data.IsHomeCollection === 1) {
-                                return '<center><a class="btn btn-primary " onclick="updateBooking(\'' + data.CycleId + '\',\'' + data.status + '\')">Scheduled</a></center>';
-                                //}
-                            }
-                            else if (data.status === 3) {
-                                //if (type === 'display') {
-                                return '<center><a class="btn btn-primary " onclick="updateBooking(\'' + data.CycleId + ',' + data.status + '\')">Collected</a></center>';
-                                //}
-                            } else if (data.status === 4) {
-                                return '<center><a class="btn btn-primary " onclick="updateBooking(\'' + data.CycleId + ',' + data.status + '\')">UPDATE</a></center>';
-                            }
-                            else if (data.status === 5) {
-                                return '<center><a class="btn btn-primary " onclick="updateBooking(\'' + data.CycleId + ',' + data.status + '\')">Resend Results</a></center>';
-                            }
-                            else
-                                return null
-                        },
-                        className: "dt-body-center"
-                    },
                 ],
                 "aaSorting": [[2, "desc"], [3, "desc"]]
             });
@@ -176,21 +198,25 @@
             jQuery.grep(dataBookings, function (n, i) {
                 if (n.CycleId === id) {
                     if (parseInt(status) === 1) {
+                        console.log('Status1', id)
                         $('#status').val(2);
                         $('#clientName').val(n.FirstName);
                         $('#mid').val(id);
                     }
                     else if (parseInt(status) === 2) {
+                        console.log('Status2', id)
                         $('#status').val(3);
                         $('#clientName').val(n.FirstName);
                         $('#mid').val(id);
                     }
                     else if (parseInt(status) === 3) {
+                        console.log('Status3', id)
                         $('#status').val(4);
                         $('#clientName').val(n.FirstName);
                         $('#mid').val(id);
                     }
                     else if (parseInt(status) === 4) {
+                        console.log('Status4', id)
                         $('#status').val(5);
                         $('#clientName').val(n.FirstName);
                         $('#mid').val(id);
@@ -198,10 +224,49 @@
 
                 }
             })
-            populatBookings();
             $('#PatientBookingModal').modal('show');
         }
+        function ViewCertificate(CycleID) {
+            console.log(CycleID);
+            window.open('/Booking/CertPDF?CycleID=' + CycleID);
 
+        }
+        function SendWhatsAPP(id) {
+            jQuery.grep(dataBookings, function (n, i) {
+                if (n.CycleId === id) {
+                    $('#clientNameW').val(n.FirstName);
+                    $('#midW').val(id);
+                }
+            })
+            $('#PatientWhatsAppModal').modal('show');
+        }
+        function SendEmail(id) {
+            jQuery.grep(dataBookings, function (n, i) {
+                if (n.CycleId === id) {
+                    $('#clientNameE').val(n.FirstName);
+                    $('#midE').val(id);
+                }
+            })
+            $('#PatientEmailModal').modal('show');
+        }
+
+        function WhatsAppSender() {
+            var url = '/Booking/SendWhatsApp';
+            var postObj = {
+                "cycleId": $('#mid').val(),
+            };
+            customPost("Proceed to send Certificate Via WhatsApp?", url, postObj, 'PatientWhatsAppModal', 'PatientWhatsAppModal',
+                'PATIENT INFORMATION', populatBookings);
+        }
+
+        function EmailSender() {
+            var url = '/Booking/SendEmail';
+            var postObj = {
+                "cycleId": $('#mid').val(),
+            };
+            customPost("Proceed to send Certificate Via Email?", url, postObj, 'PatientEmailModal', 'PatientEmailModal',
+                'PATIENT INFORMATION', populatBookings);
+        }
         function ClientUpdate() {
             var url = '/Home/UpdateStatus';
             var postObj = {
@@ -242,7 +307,7 @@
                         dataType: 'JSON',
                         type: 'POST',
                         success: function (data) {
-                            if (data.Status === "success") {
+                            if (data.status === "success") {
                                 if (modalName !== null) {
                                     $('#' + modalName).modal('hide');
                                 }
@@ -256,7 +321,7 @@
                                 //    .prop('checked', false)
                                 //    .prop('selectedIndex', 0);
                                 //populatingClass();
-                                //CustomAlert(actionName, data.Message, data.Status);
+                                //CustomAlert(actionName, data.Message, data.status);
                             } else {
                                 swal("Updated!", "Booking has been updated.!", "success");
                                 $('#' + modalName).modal('hide');
@@ -518,6 +583,96 @@
                         </div>
                         <div class="modal-footer">
                             <a class="btn btn-Ocelot" onclick="ClientUpdate()">SUBMIT</a>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            @*END MODAL*@
+
+            @*WHATSAPP START MODAL*@
+            <div id="PatientWhatsAppModal" class="modal fade" role="dialog">
+                <div class="modal-dialog modal-md">
+
+                    <!-- Modal content-->
+                    <div class="modal-content">
+                        <div class="modal-header btn-Ocelot" style="text-align:center">
+                            <h4 class="modal-title">SEND CERTIFICATE</h4>
+                        </div>
+                        <div class="modal-body">
+                            <form id="scheduleWorkShopForm">
+                                <div class="row">
+                                    <div class="col-md-12">
+
+                                        <div class="row">
+                                            <div class="col-xs-12">
+                                                <div class="row">
+                                                    <div class="col-xs-6">
+                                                        <label for="driverName">CLIENT NAME:</label>
+                                                    </div>
+                                                    <div class="col-xs-10">
+                                                        <div class="input-group date">
+                                                            <input type="hidden" id="midW" />
+                                                            <input type="text" class="form-control" id="clientNameW" readonly>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div><br />
+                                    </div>
+                                </div>
+
+                            </form>
+
+                        </div>
+                        <div class="modal-footer">
+                            <a class="btn btn-Ocelot" onclick="WhatsAppSender()">SUBMIT</a>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            @*END MODAL*@
+
+            @*EMAIL START MODAL*@
+            <div id="PatientEmailModal" class="modal fade" role="dialog">
+                <div class="modal-dialog modal-md">
+
+                    <!-- Modal content-->
+                    <div class="modal-content">
+                        <div class="modal-header btn-Ocelot" style="text-align:center">
+                            <h4 class="modal-title">SEND CERTIFICATE</h4>
+                        </div>
+                        <div class="modal-body">
+                            <form id="scheduleWorkShopForm">
+                                <div class="row">
+                                    <div class="col-md-12">
+
+                                        <div class="row">
+                                            <div class="col-xs-12">
+                                                <div class="row">
+                                                    <div class="col-xs-6">
+                                                        <label for="driverName">CLIENT NAME:</label>
+                                                    </div>
+                                                    <div class="col-xs-10">
+                                                        <div class="input-group date">
+                                                            <input type="hidden" id="midE" />
+                                                            <input type="text" class="form-control" id="clientNameE" readonly>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div><br />
+                                    </div>
+                                </div>
+
+                            </form>
+
+                        </div>
+                        <div class="modal-footer">
+                            <a class="btn btn-Ocelot" onclick="EmailSender()">SUBMIT</a>
                         </div>
                     </div>
 
