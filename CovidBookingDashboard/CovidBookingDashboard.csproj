@@ -11328,6 +11328,7 @@
     <Content Include="Scripts\bower_components\select2\vendor\jquery-2.1.0.js" />
     <Content Include="Scripts\Common.js" />
     <Content Include="Scripts\global.js" />
+    <Content Include="Scripts\homeSamplejs.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
     <Content Include="Scripts\jquery-3.4.1.min.js" />
     <Content Include="Scripts\jquery-3.4.1.slim.js" />

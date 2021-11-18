@@ -69,6 +69,7 @@ D:\Checkups\CovidBookingDashboard\CovidBookingDashboard\bin\Microsoft.Owin.Secur
 D:\Checkups\CovidBookingDashboard\CovidBookingDashboard\bin\Microsoft.Web.Infrastructure.dll
 D:\Checkups\CovidBookingDashboard\CovidBookingDashboard\bin\Newtonsoft.Json.dll
 D:\Checkups\CovidBookingDashboard\CovidBookingDashboard\bin\Owin.dll
+D:\Checkups\CovidBookingDashboard\CovidBookingDashboard\bin\Select.HtmlToPdf.dll
 D:\Checkups\CovidBookingDashboard\CovidBookingDashboard\bin\System.Web.Helpers.dll
 D:\Checkups\CovidBookingDashboard\CovidBookingDashboard\bin\System.Web.Mvc.dll
 D:\Checkups\CovidBookingDashboard\CovidBookingDashboard\bin\System.Web.Optimization.dll
@@ -77,6 +78,7 @@ D:\Checkups\CovidBookingDashboard\CovidBookingDashboard\bin\System.Web.WebPages.
 D:\Checkups\CovidBookingDashboard\CovidBookingDashboard\bin\System.Web.WebPages.dll
 D:\Checkups\CovidBookingDashboard\CovidBookingDashboard\bin\System.Web.WebPages.Razor.dll
 D:\Checkups\CovidBookingDashboard\CovidBookingDashboard\bin\WebGrease.dll
+D:\Checkups\CovidBookingDashboard\CovidBookingDashboard\bin\Select.HtmlToPdf.xml
 D:\Checkups\CovidBookingDashboard\CovidBookingDashboard\bin\System.Web.Helpers.xml
 D:\Checkups\CovidBookingDashboard\CovidBookingDashboard\bin\System.Web.Mvc.xml
 D:\Checkups\CovidBookingDashboard\CovidBookingDashboard\bin\System.Web.Optimization.xml
@@ -101,11 +103,8 @@ D:\Checkups\CovidBookingDashboard\CovidBookingDashboard\bin\Microsoft.Owin.Secur
 D:\Checkups\CovidBookingDashboard\CovidBookingDashboard\bin\Microsoft.Owin.Security.MicrosoftAccount.xml
 D:\Checkups\CovidBookingDashboard\CovidBookingDashboard\bin\Microsoft.Owin.Security.OAuth.xml
 D:\Checkups\CovidBookingDashboard\CovidBookingDashboard\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.xml
-D:\Checkups\CovidBookingDashboard\CovidBookingDashboard\obj\Debug\CovidBookingDashboard.csproj.AssemblyReference.cache
+D:\Checkups\CovidBookingDashboard\CovidBookingDashboard\bin\Select.Html.dep
 D:\Checkups\CovidBookingDashboard\CovidBookingDashboard\obj\Debug\CovidBookingDashboard.csproj.CoreCompileInputs.cache
 D:\Checkups\CovidBookingDashboard\CovidBookingDashboard\obj\Debug\CovidBookingDashboard.csproj.CopyComplete
 D:\Checkups\CovidBookingDashboard\CovidBookingDashboard\obj\Debug\CovidBookingDashboard.dll
 D:\Checkups\CovidBookingDashboard\CovidBookingDashboard\obj\Debug\CovidBookingDashboard.pdb
-D:\Checkups\CovidBookingDashboard\CovidBookingDashboard\bin\Select.HtmlToPdf.dll
-D:\Checkups\CovidBookingDashboard\CovidBookingDashboard\bin\Select.HtmlToPdf.xml
-D:\Checkups\CovidBookingDashboard\CovidBookingDashboard\bin\Select.Html.dep
