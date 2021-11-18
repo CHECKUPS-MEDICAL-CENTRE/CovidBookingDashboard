@@ -11,7 +11,7 @@
     <!-- Google Font -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-    <link href="~/Content/sweetalert/sweetalert.css" rel="stylesheet" />
+    @*<link href="~/Content/sweetalert/sweetalert.css" rel="stylesheet" />*@
     <link href="~/Scripts/bower_components/jquery-ui/themes/black-tie/jquery-ui.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="~/Content/adminlte/css/style.css">
     <link rel="stylesheet" href="~/Scripts/adminlte/components/Ionicons/css/ionicons.min.css">
@@ -49,8 +49,9 @@
         immediately after the control sidebar -->
         <div class="control-sidebar-bg"></div>
     </div>
+    @RenderSection("scripts", required: false)
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
+    @*<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>*@
     <script src="../assets/js/plugins/perfect-scrollbar.min.js"></script>
     <script src="../assets/js/plugins/smooth-scrollbar.min.js"></script>
     @*<script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>*@
@@ -58,6 +59,6 @@
         window.onbeforeunload = function () {
         }
     </script>
-    @RenderSection("scripts", required: false)
+
 </body>
 </html>

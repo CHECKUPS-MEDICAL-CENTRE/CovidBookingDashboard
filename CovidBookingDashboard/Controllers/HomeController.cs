@@ -72,11 +72,11 @@ namespace CovidBookingDashboard.Controllers
 
             return Json(patientslist, JsonRequestBehavior.AllowGet);
         }
-        public JsonResult getVisits(DateTime startDate, DateTime endDate)
+        public JsonResult getVisits(DateTime startDate, DateTime endDate, int status)
         {
             // OnlinePatientModel patients = new OnlinePatientModel();
             List<OnlinePatientModel> patientslist = new List<OnlinePatientModel>();
-            DataTable dtFiles = GetVisitsByDateRange(startDate, endDate);
+            DataTable dtFiles = GetVisitsByDateRange(startDate, endDate,status);
             foreach (DataRow dr in dtFiles.Rows)
             {
                 //cycle_id	FullName	cycle_created_time	IsWhatsappSent	lab_test_desc	gender	id_no	email	nationality	channel	PhoneNumber	PaymentMethod	CollectionLocation	IsHomeCollection	status
@@ -333,7 +333,7 @@ where cast(DateCreated as Date) between  cast({startDate} as Date) and cast({end
         }
 
 
-        private DataTable GetVisitsByDateRange(DateTime startDate, DateTime endDate)
+        private DataTable GetVisitsByDateRange(DateTime startDate, DateTime endDate, int status)
         {
             DataTable dtData = new DataTable();
             SqlConnection con = new SqlConnection(conString);
@@ -348,7 +348,7 @@ where cast(DateCreated as Date) between  cast({startDate} as Date) and cast({end
             group by cycle_id
             )r on r.cycle_id=vc.cycle_id
             left join onlinepatients op on op.CycleId=vc.cycle_id
-            where document_type='covid_cert' and cast(vc.cycle_created_time as date) between cast('{startDate}' as date) and cast('{endDate}' as date)
+            where document_type='covid_cert' and cast(vc.cycle_created_time as date) between cast('{startDate}' as date) and cast('{endDate}' as date) and vc.status='{status}'
             order by cycle_created_time desc
             ", con);
                         SqlDataAdapter da = new SqlDataAdapter(command);
