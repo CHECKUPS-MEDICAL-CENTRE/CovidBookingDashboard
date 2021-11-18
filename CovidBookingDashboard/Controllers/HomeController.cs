@@ -339,16 +339,16 @@ where cast(DateCreated as Date) between  cast({startDate} as Date) and cast({end
             SqlConnection con = new SqlConnection(conString);
             con.Open();
             SqlCommand command = new SqlCommand($@"select  vc.cycle_id, (PR.patient_first_name+' '+ pr.patient_middle_name +' '+ PR.patient_last_name) AS FullName, vc.cycle_created_time,
-            dl.IsWhatsappSent,lab_test_desc, pr.gender, id_no, pr.email, pr.nationality, channel,
-            pr.patient_tel as PhoneNumber,op.PaymentMethod,op.CollectionLocation,op.IsHomeCollection,vc.status,cast(pr.Date as date)DateCreated
+            isNULL(dl.IsWhatsappSent,'0')IsWhatsappSent, pr.gender, id_no, pr.email, pr.nationality, channel,
+            pr.patient_tel as PhoneNumber,isNULL(op.PaymentMethod,'N/A')PaymentMethod,isNULL(op.CollectionLocation,'N/A')CollectionLocation,isNULL(op.IsHomeCollection,'0')IsHomeCollection,vc.status,cast(pr.Date as date)DateCreated
             from visit_cycle VC
-            left JOIN DocumentsLog dl ON VC.cycle_id= dl.cycle_id
+            left JOIN (select * from DocumentsLog where document_type='covid_cert')dl ON VC.cycle_id= dl.cycle_id
             inner join patient_registration pr on pr.patient_id=vc.patient_id
             left join (select cycle_id,max(lab_test_desc)lab_test_desc from test_results ts inner join lab_test lt on ts.lab_test_id=lt.lab_test_id
             group by cycle_id
             )r on r.cycle_id=vc.cycle_id
             left join onlinepatients op on op.CycleId=vc.cycle_id
-            where document_type='covid_cert' and cast(vc.cycle_created_time as date) between cast('{startDate}' as date) and cast('{endDate}' as date) and vc.status='{status}'
+            where test_type like '%PCR%' and cast(vc.cycle_created_time as date) between cast('{startDate}' as date) and cast('{endDate}' as date) and vc.status='{status}'
             order by cycle_created_time desc
             ", con);
                         SqlDataAdapter da = new SqlDataAdapter(command);
