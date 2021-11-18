@@ -1,13 +1,55 @@
 ﻿
 @{
     ViewBag.Title = "index2";
-    Layout = "~/Views/Shared/_Layout2.cshtml";
+    Layout = "~/Views/Shared/_Layout3.cshtml";
 }
 @using CovidBookingDashboard.Controllers;
 @section styles {
+    <style>
+        .form-inline .form-control {
+            display: inline-block;
+            width: auto;
+            vertical-align: middle;
+        }
+
+        .table-title {
+            padding-bottom: 15px;
+            background: #435d7d;
+            color: #fff;
+            padding: 16px 30px;
+            margin: -20px -25px 10px;
+            border-radius: 3px 3px 0 0;
+        }
+
+        .form-inline .form-control {
+            display: inline-block;
+            width: auto;
+            vertical-align: middle;
+        }
+
+        form-control {
+            display: block;
+            width: 100%;
+            height: 34px;
+            padding: 6px 12px;
+            font-size: 14px;
+            line-height: 1.42857143;
+            color: #555;
+            background-color: #fff;
+            background-image: none;
+            border: 1px solid #ccc;
+            border-radius: 0;
+            box-shadow: none;
+            border-color: #d2d6de;
+        }
+    </style>
     <link href="//cdn.datatables.net/1.10.9/css/jquery.dataTables.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css" 
+    @*adminlte.min*@
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css"
           integrity="sha512-mSYUmp1HYZDFaVKK//63EcZq4iFWFjxSL+Z3T/aCt4IO9Cejm03q3NKKYN6pFQzY0SBOr8h+eCIAZHPXcpZaNw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 }
 @section Scripts
@@ -166,7 +208,7 @@
                                         + '</div>';
                                 }
                             }
-                            else if (data.status === 2  && data.isWhatsAppSent === 2) {
+                            else if (data.status === 2 && data.isWhatsAppSent === 2) {
                                 if (type === 'display') {
                                     dt = '<div class="dropdown ">'
                                         + '<button class="fa fa-list btn btn-primary dropdown-toggle " type="button" data-toggle="dropdown" ">'
@@ -396,407 +438,473 @@
         }
     </script>
 }
-<main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
-    <!-- Navbar -->
-    <nav class="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl" id="navbarBlur" navbar-scroll="true">
-        <div class="container-fluid py-1 px-3">
-            <nav aria-label="breadcrumb">
-                <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
-                    <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="javascript:;">Pages</a></li>
-                    <li class="breadcrumb-item text-sm text-dark active" aria-current="page">Dashboard</li>
-                </ol>
-                <h6 class="font-weight-bolder mb-0">Dashboard </h6>
-            </nav>
-            <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
-                <div class="ms-md-auto pe-md-3 d-flex align-items-center">
-                    <div class="input-group input-group-outline">
-                        <label class="form-label">Type here.</label>
-                        <input type="text" class="form-control">
-                    </div>
+<!--<main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">-->
+<!-- Navbar -->
+<!--<nav class="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl" id="navbarBlur" navbar-scroll="true">
+    <div class="container-fluid py-1 px-3">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
+                <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="javascript:;">Pages</a></li>
+                <li class="breadcrumb-item text-sm text-dark active" aria-current="page">Dashboard</li>
+            </ol>
+            <h6 class="font-weight-bolder mb-0">Dashboard </h6>
+        </nav>
+        <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
+            <div class="ms-md-auto pe-md-3 d-flex align-items-center">
+                <div class="input-group input-group-outline">
+                    <label class="form-label">Type here.</label>
+                    <input type="text" class="form-control">
                 </div>
-                <ul class="navbar-nav  justify-content-end">
-                    <li class="nav-item d-flex align-items-center">
-                        <a href="javascript:;" class="nav-link text-body font-weight-bold px-0">
-                            <i class="fa fa-user me-sm-1"></i>
-                            <span class="d-sm-inline d-none">Sign In</span>
-                        </a>
-                    </li>
-                    <li class="nav-item d-xl-none ps-3 d-flex align-items-center">
-                        <a href="javascript:;" class="nav-link text-body p-0" id="iconNavbarSidenav">
-                            <div class="sidenav-toggler-inner">
-                                <i class="sidenav-toggler-line"></i>
-                                <i class="sidenav-toggler-line"></i>
-                                <i class="sidenav-toggler-line"></i>
-                            </div>
-                        </a>
-                    </li>
-                    <li class="nav-item px-3 d-flex align-items-center">
-                        <a href="javascript:;" class="nav-link text-body p-0">
-                            <i class="fa fa-cog fixed-plugin-button-nav cursor-pointer"></i>
-                        </a>
-                    </li>
-                    <li class="nav-item dropdown pe-2 d-flex align-items-center">
-                        <a href="javascript:;" class="nav-link text-body p-0" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="fa fa-bell cursor-pointer"></i>
-                        </a>
-                        <ul class="dropdown-menu  dropdown-menu-end  px-2 py-3 me-sm-n4" aria-labelledby="dropdownMenuButton">
-                            <li class="mb-2">
-                                <a class="dropdown-item border-radius-md" href="javascript:;">
-                                    <div class="d-flex py-1">
-                                        <div class="my-auto">
-                                            <img src="../assets/img/team-2.jpg" class="avatar avatar-sm  me-3 ">
-                                        </div>
-                                        <div class="d-flex flex-column justify-content-center">
-                                            <h6 class="text-sm font-weight-normal mb-1">
-                                                <span class="font-weight-bold">New message</span> from Laur
-                                            </h6>
-                                            <p class="text-xs text-secondary mb-0">
-                                                <i class="fa fa-clock me-1"></i>
-                                                13 minutes ago
-                                            </p>
-                                        </div>
+            </div>
+            <ul class="navbar-nav  justify-content-end">
+                <li class="nav-item d-flex align-items-center">
+                    <a href="javascript:;" class="nav-link text-body font-weight-bold px-0">
+                        <i class="fa fa-user me-sm-1"></i>
+                        <span class="d-sm-inline d-none">Sign In</span>
+                    </a>
+                </li>
+                <li class="nav-item d-xl-none ps-3 d-flex align-items-center">
+                    <a href="javascript:;" class="nav-link text-body p-0" id="iconNavbarSidenav">
+                        <div class="sidenav-toggler-inner">
+                            <i class="sidenav-toggler-line"></i>
+                            <i class="sidenav-toggler-line"></i>
+                            <i class="sidenav-toggler-line"></i>
+                        </div>
+                    </a>
+                </li>
+                <li class="nav-item px-3 d-flex align-items-center">
+                    <a href="javascript:;" class="nav-link text-body p-0">
+                        <i class="fa fa-cog fixed-plugin-button-nav cursor-pointer"></i>
+                    </a>
+                </li>
+                <li class="nav-item dropdown pe-2 d-flex align-items-center">
+                    <a href="javascript:;" class="nav-link text-body p-0" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fa fa-bell cursor-pointer"></i>
+                    </a>
+                    <ul class="dropdown-menu  dropdown-menu-end  px-2 py-3 me-sm-n4" aria-labelledby="dropdownMenuButton">
+                        <li class="mb-2">
+                            <a class="dropdown-item border-radius-md" href="javascript:;">
+                                <div class="d-flex py-1">
+                                    <div class="my-auto">
+                                        <img src="../assets/img/team-2.jpg" class="avatar avatar-sm  me-3 ">
                                     </div>
-                                </a>
-                            </li>
-                            <li class="mb-2">
-                                <a class="dropdown-item border-radius-md" href="javascript:;">
-                                    <div class="d-flex py-1">
-                                        <div class="my-auto">
-                                            <img src="../assets/img/small-logos/logo-spotify.svg" class="avatar avatar-sm bg-gradient-dark  me-3 ">
-                                        </div>
-                                        <div class="d-flex flex-column justify-content-center">
-                                            <h6 class="text-sm font-weight-normal mb-1">
-                                                <span class="font-weight-bold">New album</span> by Travis Scott
-                                            </h6>
-                                            <p class="text-xs text-secondary mb-0">
-                                                <i class="fa fa-clock me-1"></i>
-                                                1 day
-                                            </p>
-                                        </div>
+                                    <div class="d-flex flex-column justify-content-center">
+                                        <h6 class="text-sm font-weight-normal mb-1">
+                                            <span class="font-weight-bold">New message</span> from Laur
+                                        </h6>
+                                        <p class="text-xs text-secondary mb-0">
+                                            <i class="fa fa-clock me-1"></i>
+                                            13 minutes ago
+                                        </p>
                                     </div>
-                                </a>
-                            </li>
-                            <li>
-                                <a class="dropdown-item border-radius-md" href="javascript:;">
-                                    <div class="d-flex py-1">
-                                        <div class="avatar avatar-sm bg-gradient-secondary  me-3  my-auto">
-                                            <svg width="12px" height="12px" viewBox="0 0 43 36" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-                                                <title>credit-card</title>
-                                                <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                                                    <g transform="translate(-2169.000000, -745.000000)" fill="#FFFFFF" fill-rule="nonzero">
-                                                        <g transform="translate(1716.000000, 291.000000)">
-                                                            <g transform="translate(453.000000, 454.000000)">
-                                                                <path class="color-background" d="M43,10.7482083 L43,3.58333333 C43,1.60354167 41.3964583,0 39.4166667,0 L3.58333333,0 C1.60354167,0 0,1.60354167 0,3.58333333 L0,10.7482083 L43,10.7482083 Z" opacity="0.593633743"></path>
-                                                                <path class="color-background" d="M0,16.125 L0,32.25 C0,34.2297917 1.60354167,35.8333333 3.58333333,35.8333333 L39.4166667,35.8333333 C41.3964583,35.8333333 43,34.2297917 43,32.25 L43,16.125 L0,16.125 Z M19.7083333,26.875 L7.16666667,26.875 L7.16666667,23.2916667 L19.7083333,23.2916667 L19.7083333,26.875 Z M35.8333333,26.875 L28.6666667,26.875 L28.6666667,23.2916667 L35.8333333,23.2916667 L35.8333333,26.875 Z"></path>
-                                                            </g>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="mb-2">
+                            <a class="dropdown-item border-radius-md" href="javascript:;">
+                                <div class="d-flex py-1">
+                                    <div class="my-auto">
+                                        <img src="../assets/img/small-logos/logo-spotify.svg" class="avatar avatar-sm bg-gradient-dark  me-3 ">
+                                    </div>
+                                    <div class="d-flex flex-column justify-content-center">
+                                        <h6 class="text-sm font-weight-normal mb-1">
+                                            <span class="font-weight-bold">New album</span> by Travis Scott
+                                        </h6>
+                                        <p class="text-xs text-secondary mb-0">
+                                            <i class="fa fa-clock me-1"></i>
+                                            1 day
+                                        </p>
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item border-radius-md" href="javascript:;">
+                                <div class="d-flex py-1">
+                                    <div class="avatar avatar-sm bg-gradient-secondary  me-3  my-auto">
+                                        <svg width="12px" height="12px" viewBox="0 0 43 36" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                                            <title>credit-card</title>
+                                            <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                                <g transform="translate(-2169.000000, -745.000000)" fill="#FFFFFF" fill-rule="nonzero">
+                                                    <g transform="translate(1716.000000, 291.000000)">
+                                                        <g transform="translate(453.000000, 454.000000)">
+                                                            <path class="color-background" d="M43,10.7482083 L43,3.58333333 C43,1.60354167 41.3964583,0 39.4166667,0 L3.58333333,0 C1.60354167,0 0,1.60354167 0,3.58333333 L0,10.7482083 L43,10.7482083 Z" opacity="0.593633743"></path>
+                                                            <path class="color-background" d="M0,16.125 L0,32.25 C0,34.2297917 1.60354167,35.8333333 3.58333333,35.8333333 L39.4166667,35.8333333 C41.3964583,35.8333333 43,34.2297917 43,32.25 L43,16.125 L0,16.125 Z M19.7083333,26.875 L7.16666667,26.875 L7.16666667,23.2916667 L19.7083333,23.2916667 L19.7083333,26.875 Z M35.8333333,26.875 L28.6666667,26.875 L28.6666667,23.2916667 L35.8333333,23.2916667 L35.8333333,26.875 Z"></path>
                                                         </g>
                                                     </g>
                                                 </g>
-                                            </svg>
-                                        </div>
-                                        <div class="d-flex flex-column justify-content-center">
-                                            <h6 class="text-sm font-weight-normal mb-1">
-                                                Payment successfully completed
-                                            </h6>
-                                            <p class="text-xs text-secondary mb-0">
-                                                <i class="fa fa-clock me-1"></i>
-                                                2 days
-                                            </p>
-                                        </div>
+                                            </g>
+                                        </svg>
                                     </div>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
-    <!-- End Navbar -->
-    <div class="container-fluid py-4">
-        <div class="row">
-            <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
-                <div class="card">
-                    <div class="card-header p-3 pt-2">
-                        <div class="icon icon-lg icon-shape bg-gradient-dark shadow-dark text-center border-radius-xl mt-n4 position-absolute">
-                            <i class="material-icons opacity-10">recent_actors</i>
-                        </div>
-                        <div class="text-end pt-1 new-clients">
-                            <p class="text-sm mb-0 text-capitalize">New Clients</p>
-                            <h4 class="mb-0" id="newClients"></h4>
-                        </div>
-                    </div>
-                    <hr class="dark horizontal my-0">
-                    <div class="card-footer p-3">
-                        <a href="@Url.Action("../Home/newbookings")"><p class="mb-0"><span class="text-success text-sm font-weight-bolder"> </span>Daily Registered Clients</p></a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
-                <div class="card">
-                    <div class="card-header p-3 pt-2">
-                        <div class="icon icon-lg icon-shape bg-gradient-primary shadow-primary text-center border-radius-xl mt-n4 position-absolute">
-                            <i class="material-icons opacity-10">account_circle</i>
-                        </div>
-                        <div class="text-end pt-1 MonthToDate">
-                            <p class="text-sm mb-0 text-capitalize">Month ToDate Clients</p>
-                            <h4 class="mb-0" id="MonthlyClients"></h4>
-                        </div>
-                    </div>
-                    <hr class="dark horizontal my-0">
-                    <div class="card-footer p-3">
-                        <p class="mb-0"><span class="text-success text-sm font-weight-bolder"></span>Monthly registered clients</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
-                <div class="card">
-                    <div class="card-header p-3 pt-2">
-                        <div class="icon icon-lg icon-shape bg-gradient-success shadow-success text-center border-radius-xl mt-n4 position-absolute">
-                            <i class="material-icons opacity-10">person</i>
-                        </div>
-                        <div class="text-end pt-1">
-                            <p class="text-sm mb-0 text-capitalize">HOME SAMPLE</p>
-                            <h4 class="mb-0" id="HomeSample"></h4>
-                        </div>
-                    </div>
-                    <hr class="dark horizontal my-0">
-                    <div class="card-footer p-3">
-                        <a href="@Url.Action("../Home/homesample")"><p class="mb-0"><span class="text-danger text-sm font-weight-bolder"></span>Daily home collections</p></a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-xl-3 col-sm-6">
-                <div class="card">
-                    <div class="card-header p-3 pt-2">
-                        <div class="icon icon-lg icon-shape bg-gradient-info shadow-info text-center border-radius-xl mt-n4 position-absolute">
-                            <i class="material-icons opacity-10">accessibility</i>
-                        </div>
-                        <div class="text-end pt-1">
-                            <p class="text-sm mb-0 text-capitalize">WALK-INS</p>
-                            <h4 class="mb-0" id="WalkIns"></h4>
-                        </div>
-                    </div>
-                    <hr class="dark horizontal my-0">
-                    <div class="card-footer p-3">
-                        <a href="@Url.Action("../Home/walkins")"><p class="mb-0"><span class="text-success text-sm font-weight-bolder"></span>Daily total walk-ins</p></a>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="row mt-4">
-            <div class="col-lg-12 col-md-12 mb-md-0 mb-4">
-                <div class="card">
-                    <div class="card-header pb-0">
-                        <div class="row">
-                            <div class="col-lg-6 col-7">
-                                <h6>List of Bookings</h6>
-                            </div>
-                            <div class="col-md-12">
-                                <div class="row">
-                                    <div class="col-xs-5">
-                                        <div class="form-group">
-                                            <label class="control-label" for="first_name">From</label>
-                                            <input type="text" class="contactInput form-control" id="StartDate">
-                                        </div>
-                                    </div>
-                                    <div class="col-xs-5">
-                                        <div class="form-group">
-                                            <label class="control-label" for="last_name">TO</label>
-                                            <input id="EndDate" type="text" class="contactInput form-control">
-                                        </div>
-                                    </div>
-                                    <div class="col-xs-2">
-                                        <div class="form-group">
-                                            <button type="button" id="filterByDate" class="btn btn-Ocelot" style="background-color:forestgreen;">FILTER</button>
-                                        </div>
+                                    <div class="d-flex flex-column justify-content-center">
+                                        <h6 class="text-sm font-weight-normal mb-1">
+                                            Payment successfully completed
+                                        </h6>
+                                        <p class="text-xs text-secondary mb-0">
+                                            <i class="fa fa-clock me-1"></i>
+                                            2 days
+                                        </p>
                                     </div>
                                 </div>
-                            </div>
-
-                        </div>
-                    </div>
-                    <div class="card-body px-2 pb-2">
- 
-                        <div class="table-responsive">
-                   
-                                        <table id="patientsTables" class="table align-items-center mb-0"></table>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-            @*START MODAL*@
-            <div id="PatientBookingModal" class="modal fade" role="dialog">
-                <div class="modal-dialog modal-md">
-
-                    <!-- Modal content-->
-                    <div class="modal-content">
-                        <div class="modal-header btn-Ocelot" style="text-align:center">
-                            <h4 class="modal-title">UPDATE BOOKING STATUS</h4>
-                        </div>
-                        <div class="modal-body">
-                            <form id="scheduleWorkShopForm">
-                                <div class="row">
-                                    <div class="col-md-12">
-
-                                        <div class="row">
-                                            <div class="col-xs-12">
-                                                <div class="row">
-                                                    <div class="col-xs-6">
-                                                        <label for="driverName">CLIENT NAME:</label>
-                                                    </div>
-                                                    <div class="col-xs-10">
-                                                        <div class="input-group date">
-                                                            <input type="hidden" id="status" />
-                                                            <input type="hidden" id="mid" />
-                                                            <input type="text" class="form-control" id="clientName" readonly>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                        </div><br />
-                                    </div>
-                                </div>
-
-                            </form>
-
-                        </div>
-                        <div class="modal-footer">
-                            <a class="btn btn-Ocelot" onclick="ClientUpdate()">SUBMIT</a>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-            @*END MODAL*@
-
-            @*WHATSAPP START MODAL*@
-            <div id="PatientWhatsAppModal" class="modal fade" role="dialog">
-                <div class="modal-dialog modal-md">
-
-                    <!-- Modal content-->
-                    <div class="modal-content">
-                        <div class="modal-header btn-Ocelot" style="text-align:center">
-                            <h4 class="modal-title">SEND CERTIFICATE</h4>
-                        </div>
-                        <div class="modal-body">
-                            <form id="scheduleWorkShopForm">
-                                <div class="row">
-                                    <div class="col-md-12">
-
-                                        <div class="row">
-                                            <div class="col-xs-12">
-                                                <div class="row">
-                                                    <div class="col-xs-6">
-                                                        <label for="driverName">CLIENT NAME:</label>
-                                                    </div>
-                                                    <div class="col-xs-10">
-                                                        <div class="input-group date">
-                                                            <input type="hidden" id="midW" />
-                                                            <input type="text" class="form-control" id="clientNameW" readonly>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                        </div><br />
-                                    </div>
-                                </div>
-
-                            </form>
-
-                        </div>
-                        <div class="modal-footer">
-                            <a class="btn btn-Ocelot" onclick="WhatsAppSender()">SUBMIT</a>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-            @*END MODAL*@
-
-            @*EMAIL START MODAL*@
-            <div id="PatientEmailModal" class="modal fade" role="dialog">
-                <div class="modal-dialog modal-md">
-
-                    <!-- Modal content-->
-                    <div class="modal-content">
-                        <div class="modal-header btn-Ocelot" style="text-align:center">
-                            <h4 class="modal-title">SEND CERTIFICATE</h4>
-                        </div>
-                        <div class="modal-body">
-                            <form id="scheduleWorkShopForm">
-                                <div class="row">
-                                    <div class="col-md-12">
-
-                                        <div class="row">
-                                            <div class="col-xs-12">
-                                                <div class="row">
-                                                    <div class="col-xs-6">
-                                                        <label for="driverName">CLIENT NAME:</label>
-                                                    </div>
-                                                    <div class="col-xs-10">
-                                                        <div class="input-group date">
-                                                            <input type="hidden" id="midE" />
-                                                            <input type="text" class="form-control" id="clientNameE" readonly>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                        </div><br />
-                                    </div>
-                                </div>
-
-                            </form>
-
-                        </div>
-                        <div class="modal-footer">
-                            <a class="btn btn-Ocelot" onclick="EmailSender()">SUBMIT</a>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-            @*END MODAL*@
-
-        </div>
-    </div>
-    <footer class="footer py-4  ">
-        <div class="container-fluid">
-            <div class="row align-items-center justify-content-lg-between">
-                <div class="col-lg-6 mb-lg-0 mb-4">
-                    <div class="copyright text-center text-sm text-muted text-lg-start">
-                        ©
-                        <script>
-                            document.write(new Date().getFullYear())
-                        </script>,
-                        made with <i class="fa fa-heart"></i> by
-                        <a href="https://www.creative-tim.com" class="font-weight-bold" target="_blank">Creative Tim</a>
-                        for a better web.
-                    </div>
-                </div>
-                <div class="col-lg-6">
-                    <ul class="nav nav-footer justify-content-center justify-content-lg-end">
-                        <li class="nav-item">
-                            <a href="https://www.creative-tim.com" class="nav-link text-muted" target="_blank">Creative Tim</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="https://www.creative-tim.com/presentation" class="nav-link text-muted" target="_blank">About Us</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="https://www.creative-tim.com/blog" class="nav-link text-muted" target="_blank">Blog</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="https://www.creative-tim.com/license" class="nav-link pe-0 text-muted" target="_blank">License</a>
+                            </a>
                         </li>
                     </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>-->
+<!-- End Navbar -->
+<!--<div class="container-fluid py-4">
+    <div class="row">
+
+          <div class="col-xl-3 col-lg-3  col-sm-6 mb-xl-0 mb-4">
+            <div class="card">
+                <div class="card-header p-3 pt-2">
+                    <div class="icon icon-lg icon-shape bg-gradient-dark shadow-dark text-center border-radius-xl mt-n4 position-absolute">
+                        <i class="material-icons opacity-10">recent_actors</i>
+                    </div>
+                    <div class="text-end pt-1 new-clients">
+                        <p class="text-sm mb-0 text-capitalize">New Clients</p>
+                        <h4 class="mb-0" id="newClients"></h4>
+                    </div>
+                </div>
+                <hr class="dark horizontal my-0">
+                <div class="card-footer p-3">
+                    <a href="@Url.Action("../Home/newbookings")"><p class="mb-0"><span class="text-success text-sm font-weight-bolder"> </span>Daily Registered Clients</p></a>
                 </div>
             </div>
         </div>
-    </footer>
-</main>
+        <div class="col-xl-3 col-lg-3  col-sm-6 mb-xl-0 mb-4">
+            <div class="card">
+                <div class="card-header p-3 pt-2">
+                    <div class="icon icon-lg icon-shape bg-gradient-primary shadow-primary text-center border-radius-xl mt-n4 position-absolute">
+                        <i class="material-icons opacity-10">account_circle</i>
+                    </div>
+                    <div class="text-end pt-1 MonthToDate">
+                        <p class="text-sm mb-0 text-capitalize">Month ToDate Clients</p>
+                        <h4 class="mb-0" id="MonthlyClients"></h4>
+                    </div>
+                </div>
+                <hr class="dark horizontal my-0">
+                <div class="card-footer p-3">
+                    <p class="mb-0"><span class="text-success text-sm font-weight-bolder"></span>Monthly registered clients</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-lg-3  col-sm-6 mb-xl-0 mb-4">
+            <div class="card">
+                <div class="card-header p-3 pt-2">
+                    <div class="icon icon-lg icon-shape bg-gradient-success shadow-success text-center border-radius-xl mt-n4 position-absolute">
+                        <i class="material-icons opacity-10">person</i>
+                    </div>
+                    <div class="text-end pt-1">
+                        <p class="text-sm mb-0 text-capitalize">HOME SAMPLE</p>
+                        <h4 class="mb-0" id="HomeSample"></h4>
+                    </div>
+                </div>
+                <hr class="dark horizontal my-0">
+                <div class="card-footer p-3">
+                    <a href="@Url.Action("../Home/homesample")"><p class="mb-0"><span class="text-danger text-sm font-weight-bolder"></span>Daily home collections</p></a>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-lg-3  col-sm-6">
+            <div class="card">
+                <div class="card-header p-3 pt-2">
+                    <div class="icon icon-lg icon-shape bg-gradient-info shadow-info text-center border-radius-xl mt-n4 position-absolute">
+                        <i class="material-icons opacity-10">accessibility</i>
+                    </div>
+                    <div class="text-end pt-1">
+                        <p class="text-sm mb-0 text-capitalize">WALK-INS</p>
+                        <h4 class="mb-0" id="WalkIns"></h4>
+                    </div>
+                </div>
+                <hr class="dark horizontal my-0">
+                <div class="card-footer p-3">
+                    <a href="@Url.Action("../Home/walkins")"><p class="mb-0"><span class="text-success text-sm font-weight-bolder"></span>Daily total walk-ins</p></a>
+                </div>
+            </div>
+        </div>
+    </div>-->
+<div class="content-wrapper">
+    <section class="content">
+        <div class="row">
+            <div class="col-lg-12 col-12">
+                <div class="row">
+                    <div class="col-lg-3 col-6">
+                        <!-- small card -->
+                        <div class="small-box" style="background-color:#0dccff; color: white">
+                            <div class="inner">
+                                <h3 id="newClients"></h3>
+                                <p>NEW CLIENTS</p>
+                            </div>
+                            <div class="icon">
+                                <i class="fas fa-shopping-cart"></i>
+                            </div>
+                            <a href="@Url.Action("../Home/newbookings")" class="small-box-footer">
+                                <p class="mb-0">
+                                    <span> </span>
+                                    Daily Registered Clients <i class="fas fa-arrow-right"></i>
+                                </p>
+                            </a>
+                        </div>
+                    </div>
+                    <!-- ./col -->
+                    <div class="col-lg-3 col-6">
+                        <!-- small card -->
+                        <div class="small-box" style="background-color:#022c5b; color: white">
+                            <div class="inner">
+                                <h3 id="MonthlyClients"></h3>
+
+                                <p>MONTH TODATE BOOKINGS</p>
+                            </div>
+                            <div class="icon" style="color:#ffff">
+                                <i class="ion ion-stats-bars"></i>
+                            </div>
+                            <a href="#" class="small-box-footer">
+                                <p class="mb-0">
+                                    <span> </span>
+                                    Monthly registered clients <i class="fas fa-arrow-right"></i>
+                                </p>
+                            </a>
+                        </div>
+                    </div>
+                    <!-- ./col -->
+                    <div class="col-lg-3 col-6">
+                        <!-- small card -->
+                        <div class="small-box" style="background-color: #eb2027; color: white">
+                            <div class="inner">
+                                <h3 id="HomeSample"></h3>
+
+                                <p>HOME SAMPLE</p>
+                            </div>
+                            <div class="icon">
+                                <i class="fas fa-user-plus"></i>
+                            </div>
+                            <a href="@Url.Action("../Home/homesample")" class="small-box-footer">
+                                <p class="mb-0">
+                                    <span> </span>
+                                    Daily home collections <i class="fas fa-arrow-right"></i>
+                                </p>
+                            </a>
+                        </div>
+                    </div>
+                    <!-- ./col -->
+                    <div class="col-lg-3 col-6">
+                        <!-- small card -->
+                        <div class="small-box" style="background-color: #008000; color: white">
+                            <div class="inner">
+                                <h3 id="WalkIns"></h3>
+                                <p>WALK-INS</p>
+                            </div>
+                            <div class="icon">
+                                <i class="fas fa-chart-pie"></i>
+                            </div>
+                            <a href="@Url.Action("../Home/walkins")" class="small-box-footer">
+                                <p class="mb-0">
+                                    <span> </span>
+                                    DDaily Total Walk-Ins <i class="fas fa-arrow-right"></i>
+                                </p>
+                            </a>
+                        </div>
+                    </div>
+                    <!-- ./col -->
+                </div>
+            </div>
+                <!-- /.row -->
+                @*<div class="row mt-4">*@
+                <div class="col-md-12">
+                    <div class="nav-tabs-custom">
+                        <ul class="nav nav-tabs">
+                            <li class="active"><a href="#new_bookings" data-toggle="tab">NEW BOOKINGS</a></li>
+                            <li><a href="#Quotation" data-toggle="tab">SCHEDULED</a></li>
+                            <li><a href="#ServiceVoucher" data-toggle="tab">PENDING RESULTS</a></li>
+                            <li><a href="#AddExpenses" data-toggle="tab">COMPLETED</a></li>
+                        </ul>
+                        <div class="tab-content">
+                            <div class="active tab-pane" id="new_bookings">
+                                <!-- Post -->
+                                <div class="box">
+                                    <div class="table-wrapper table-responsive">
+                                        <div class="table-title">
+                                            <div class="row">
+                                                <div class="col-sm-8">
+                                                    <div class="col-xs-12">
+                                                        <div class="row">
+                                                            <div class="col-xs-12">
+                                                                <form class="form-inline">
+                                                                    <div class="form-group">
+                                                                        <label for="email" style="color:white;">FROM:</label>
+                                                                        <input type="text" autocomplete="off" class="form-control" id="StartDate">
+                                                                    </div>
+                                                                    <div class="form-group">
+                                                                        <label for="pwd" style="color:white;">To:</label>
+                                                                        <input type="text" autocomplete="off" class="form-control" id="EndDate">
+                                                                    </div>
+
+                                                                    <div class="form-group">
+                                                                        <button type="button" id="filterByDate" class="btn btn-Ocelot" style="background-color:forestgreen;">FILTER</button>
+                                                                    </div>
+                                                                </form>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-4">
+                                                    <h2>Manage <b>Travellers</b></h2>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                        <div class="box-body">
+
+                                            <table id="patientsTables" class="table align-items-center mb-0"></table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @*START MODAL*@
+                <div id="PatientBookingModal" class="modal fade" role="dialog">
+                    <div class="modal-dialog modal-md">
+
+                        <!-- Modal content-->
+                        <div class="modal-content">
+                            <div class="modal-header btn-Ocelot" style="text-align:center">
+                                <h4 class="modal-title">UPDATE BOOKING STATUS</h4>
+                            </div>
+                            <div class="modal-body">
+                                <form id="scheduleWorkShopForm">
+                                    <div class="row">
+                                        <div class="col-md-12">
+
+                                            <div class="row">
+                                                <div class="col-xs-12">
+                                                    <div class="row">
+                                                        <div class="col-xs-6">
+                                                            <label for="driverName">CLIENT NAME:</label>
+                                                        </div>
+                                                        <div class="col-xs-10">
+                                                            <div class="input-group date">
+                                                                <input type="hidden" id="status" />
+                                                                <input type="hidden" id="mid" />
+                                                                <input type="text" class="form-control" id="clientName" readonly>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </div><br />
+                                        </div>
+                                    </div>
+
+                                </form>
+
+                            </div>
+                            <div class="modal-footer">
+                                <a class="btn btn-Ocelot" onclick="ClientUpdate()">SUBMIT</a>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                @*END MODAL*@
+
+                @*WHATSAPP START MODAL*@
+                <div id="PatientWhatsAppModal" class="modal fade" role="dialog">
+                    <div class="modal-dialog modal-md">
+
+                        <!-- Modal content-->
+                        <div class="modal-content">
+                            <div class="modal-header btn-Ocelot" style="text-align:center">
+                                <h4 class="modal-title">SEND CERTIFICATE</h4>
+                            </div>
+                            <div class="modal-body">
+                                <form id="scheduleWorkShopForm">
+                                    <div class="row">
+                                        <div class="col-md-12">
+
+                                            <div class="row">
+                                                <div class="col-xs-12">
+                                                    <div class="row">
+                                                        <div class="col-xs-6">
+                                                            <label for="driverName">CLIENT NAME:</label>
+                                                        </div>
+                                                        <div class="col-xs-10">
+                                                            <div class="input-group date">
+                                                                <input type="hidden" id="midW" />
+                                                                <input type="text" class="form-control" id="clientNameW" readonly>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </div><br />
+                                        </div>
+                                    </div>
+
+                                </form>
+
+                            </div>
+                            <div class="modal-footer">
+                                <a class="btn btn-Ocelot" onclick="WhatsAppSender()">SUBMIT</a>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                @*END MODAL*@
+
+                @*EMAIL START MODAL*@
+                <div id="PatientEmailModal" class="modal fade" role="dialog">
+                    <div class="modal-dialog modal-md">
+
+                        <!-- Modal content-->
+                        <div class="modal-content">
+                            <div class="modal-header btn-Ocelot" style="text-align:center">
+                                <h4 class="modal-title">SEND CERTIFICATE</h4>
+                            </div>
+                            <div class="modal-body">
+                                <form id="scheduleWorkShopForm">
+                                    <div class="row">
+                                        <div class="col-md-12">
+
+                                            <div class="row">
+                                                <div class="col-xs-12">
+                                                    <div class="row">
+                                                        <div class="col-xs-6">
+                                                            <label for="driverName">CLIENT NAME:</label>
+                                                        </div>
+                                                        <div class="col-xs-10">
+                                                            <div class="input-group date">
+                                                                <input type="hidden" id="midE" />
+                                                                <input type="text" class="form-control" id="clientNameE" readonly>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </div><br />
+                                        </div>
+                                    </div>
+
+                                </form>
+
+                            </div>
+                            <div class="modal-footer">
+                                <a class="btn btn-Ocelot" onclick="EmailSender()">SUBMIT</a>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                @*END MODAL*@
+
+            </div>
+</section>
+</div>
+
 
