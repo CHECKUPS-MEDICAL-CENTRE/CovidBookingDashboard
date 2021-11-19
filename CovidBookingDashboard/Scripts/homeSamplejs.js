@@ -285,18 +285,19 @@ function populateScheuled() {
         columns: [
             {
                 title: "Actions", data: null, render: function (data, type, row) {
-                     if (data.status === 2) {
+                     if (data.status === 1) {
                         if (type === 'display') {
                             dt == '<div class="dropdown ">'
                                 + '<button class="fa fa-list btn btn-primary dropdown-toggle " type="button" data-toggle="dropdown" ">'
                                 + '<span class="caret"></span></button>'
                                 + '<ul class="dropdown-menu">'
                                 + '<li><a class="btn btn-primary " onclick="updateBooking(\'' + data.CycleId + '\',\'' + data.status + '\')">Scheduled</a></li>'
+                                + '<li><a onclick="ViewConsntForm(\'' + data.CycleId + '\')">Consent Form</a></li>'
                                 + '</ul>'
                                 + '</div>';
                         }
                     }
-                    else if (data.status === 2 && data.isWhatsAppSent === 2) {
+                    else if (data.status === 1) {
                         if (type === 'display') {
                             dt = '<div class="dropdown ">'
                                 + '<button class="fa fa-list btn btn-primary dropdown-toggle " type="button" data-toggle="dropdown" ">'
@@ -333,7 +334,7 @@ function populateScheuled() {
 }
 function populatePendigResults() {
     var dt;
-    $('#scheduledTables').DataTable({
+    $('#pendingResultsTables').DataTable({
         data: scheduled,
         destroy: true,
         "autoWidth": false,
@@ -344,7 +345,7 @@ function populatePendigResults() {
         columns: [
             {
                 title: "Actions", data: null, render: function (data, type, row) {
-                    if (data.status === 3) {
+                    if (data.status === 2) {
                         if (type === 'display') {
                             dt = '<div class="dropdown ">'
                                 + '<button class="fa fa-list btn btn-primary dropdown-toggle " type="button" data-toggle="dropdown" ">'
@@ -379,7 +380,7 @@ function populatePendigResults() {
 }
 function populateCompleted() {
     var dt;
-    $('#scheduledTables').DataTable({
+    $('#completedTables').DataTable({
         data: scheduled,
         destroy: true,
         "autoWidth": false,
@@ -390,22 +391,23 @@ function populateCompleted() {
         columns: [
             {
                 title: "Actions", data: null, render: function (data, type, row) {
-                      if (data.isWhatsAppSent === 0) {
-                        if (type === 'display') {
-                            dt = '<div class="dropdown ">'
-                                + '<button class="fa fa-list btn btn-primary dropdown-toggle " type="button" data-toggle="dropdown" ">'
-                                + '<span class="caret"></span></button>'
-                                + '<ul class="dropdown-menu">'
-                                + '<li><a onclick="ViewCertificate(\'' + data.CycleId + '\')">View Certificate</a></li>'
-                                + '<li><a onclick="SendWhatsAPP(\'' + data.CycleId + '\')">SendWhatsApp</a></li>'
-                                + '<li><a onclick="SendEmail(\'' + data.CycleId + '\')">Send Email</a></li>'
-                                + '<li><a onclick="ViewConsntForm(\'' + data.CycleId + '\')">Consent Form</a></li>'
-                                + '</ul>'
-                                + '</div>';
-                        }
+                    //  if (data.isWhatsAppSent === 0) {
+                    //    if (type === 'display') {
+                    //        dt = '<div class="dropdown ">'
+                    //            + '<button class="fa fa-list btn btn-primary dropdown-toggle " type="button" data-toggle="dropdown" ">'
+                    //            + '<span class="caret"></span></button>'
+                    //            + '<ul class="dropdown-menu">'
+                    //            + '<li><a onclick="ViewCertificate(\'' + data.CycleId + '\')">View Certificate</a></li>'
+                    //            + '<li><a onclick="SendWhatsAPP(\'' + data.CycleId + '\')">SendWhatsApp</a></li>'
+                    //            + '<li><a onclick="SendEmail(\'' + data.CycleId + '\')">Send Email</a></li>'
+                    //            + '<li><a onclick="ViewConsntForm(\'' + data.CycleId + '\')">Consent Form</a></li>'
+                    //            + '</ul>'
+                    //            + '</div>';
+                    //    }
 
-                    }
-                    else if (data.isWhatsAppSent === 1) {
+                    //}
+                    //else 
+                    if (data.isWhatsAppSent === 1) {
                         if (type === 'display') {
                             dt = '<div class="dropdown ">'
                                 + '<button class="fa fa-list btn btn-primary dropdown-toggle " type="button" data-toggle="dropdown" ">'
@@ -440,40 +442,36 @@ function populateCompleted() {
         "aaSorting": [[4, "desc"], [5, "desc"]]
     });
 }
-function updateBooking2(id) {
-    jQuery.grep(dataBookings, function (n, i) {
-        if (n.CycleId === id) {
-            console.log('Status6', id)
-            $('#status').val(3);
-            $('#clientName').val(n.FirstName);
-        }
-    });
-}
+//function updateBooking2(id) {
+//    jQuery.grep(dataBookings, function (n, i) {
+//        if (n.CycleId === id) {
+//            console.log('Status6', id)
+//            $('#status').val(3);
+//            $('#clientName').val(n.FirstName);
+//        }
+//    });
+//}
 
 function updateBooking(id, status) {
     jQuery.grep(dataBookings, function (n, i) {
         if (n.CycleId === id) {
             if (parseInt(status) === 0) {
-                console.log('Status1', id)
-                $('#Status').val(1);
+                $('#BookingStatus').val(1);
                 $('#clientName').val(n.FirstName);
                 $('#mid').val(id);
             }
             else if (parseInt(status) === 1) {
-                console.log('Status2', id)
-                $('#Status').val(2);
+                $('#BookingStatus').val(2);
                 $('#clientName').val(n.FirstName);
                 $('#mid').val(id);
             }
             else if (parseInt(status) === 2) {
-                console.log('Status3', id)
-                $('#Status').val(4);
+                $('#BookingStatus').val(3);
                 $('#clientName').val(n.FirstName);
                 $('#mid').val(id);
             }
             else if (parseInt(status) === 3) {
-                console.log('Status4', id)
-                $('#Status').val(5);
+                $('#BookingStatus').val(4);
                 $('#clientName').val(n.FirstName);
                 $('#mid').val(id);
             }
@@ -533,7 +531,7 @@ function ClientUpdate() {
     var url = '/Home/UpdateStatus';
     var postObj = {
         "cycleId": $('#mid').val(),
-        "newstatus": $('#status').val()
+        "newstatus": $('#BookingStatus').val()
     };
     customPost("Proceed to update booking?", url, postObj, 'PatientBookingModal', 'PatientBookingModal',
         'PATIENT INFORMATION', populateCompleted);
