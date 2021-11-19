@@ -108,3 +108,4 @@ D:\Checkups\CovidBookingDashboard\CovidBookingDashboard\obj\Debug\CovidBookingDa
 D:\Checkups\CovidBookingDashboard\CovidBookingDashboard\obj\Debug\CovidBookingDashboard.csproj.CopyComplete
 D:\Checkups\CovidBookingDashboard\CovidBookingDashboard\obj\Debug\CovidBookingDashboard.dll
 D:\Checkups\CovidBookingDashboard\CovidBookingDashboard\obj\Debug\CovidBookingDashboard.pdb
+D:\Checkups\CovidBookingDashboard\CovidBookingDashboard\obj\Debug\CovidBookingDashboard.csproj.AssemblyReference.cache
