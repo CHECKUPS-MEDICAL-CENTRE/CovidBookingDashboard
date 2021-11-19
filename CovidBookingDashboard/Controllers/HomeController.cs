@@ -91,6 +91,37 @@ namespace CovidBookingDashboard.Controllers
                     VisitTime = Convert.ToDateTime(@dr["cycle_created_time"]).ToString("HH:mm:ss"),
                     //CollectionSlot = @dr["CollectionSlot"].ToString(),
                     status = Convert.ToInt32(@dr["status"].ToString()),
+                    IsHomeCollection = Convert.ToInt32(@dr["IsHomeCollection"].ToString()),
+                    TypeOfTestDescription = dr["lab_test_desc"].ToString(),
+                    CollectionLocation = dr["CollectionLocation"].ToString(),
+                    DateCreated = Convert.ToDateTime(@dr["DateCreated"]).ToString("MM-dd-yyyy"),
+                    CycleId = dr["cycle_id"].ToString(),
+                    isWhatsAppSent = Convert.ToInt32(@dr["IsWhatsappSent"].ToString()),
+                });
+            }
+
+            return Json(patientslist, JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult getCompletedVisits(DateTime startDate, DateTime endDate)
+        {
+            // OnlinePatientModel patients = new OnlinePatientModel();
+            List<OnlinePatientModel> patientslist = new List<OnlinePatientModel>();
+            DataTable dtFiles = GetCompletedVisitsByDateRange(startDate, endDate);
+            foreach (DataRow dr in dtFiles.Rows)
+            {
+                //cycle_id	FullName	cycle_created_time	IsWhatsappSent	lab_test_desc	gender	id_no	email	nationality	channel	PhoneNumber	PaymentMethod	CollectionLocation	IsHomeCollection	status
+
+                patientslist.Add(new OnlinePatientModel
+                {
+                    FirstName = @dr["FullName"].ToString(),
+                    Telephone = @dr["PhoneNumber"].ToString(),
+                    Email = @dr["email"].ToString(),
+                    IdNumber = @dr["id_no"].ToString(),
+                    VisitDate = Convert.ToDateTime(@dr["cycle_created_time"]).ToString("MM-dd-yyyy"),
+                    VisitTime = Convert.ToDateTime(@dr["cycle_created_time"]).ToString("HH:mm:ss"),
+                    //CollectionSlot = @dr["CollectionSlot"].ToString(),
+                    status = Convert.ToInt32(@dr["status"].ToString()),
                     //IsHomeCollection = Convert.ToInt32(@dr["IsHomeCollection"].ToString()),
                     TypeOfTestDescription = dr["lab_test_desc"].ToString(),
                     //CollectionLocation = dr["CollectionLocation"].ToString(),
@@ -340,7 +371,7 @@ where cast(DateCreated as Date) between  cast({startDate} as Date) and cast({end
             con.Open();
             SqlCommand command = new SqlCommand($@"select  vc.cycle_id, (PR.patient_first_name+' '+ pr.patient_middle_name +' '+ PR.patient_last_name) AS FullName, vc.cycle_created_time,
             isNULL(dl.IsWhatsappSent,'0')IsWhatsappSent, pr.gender, id_no, pr.email, pr.nationality, channel,
-            pr.patient_tel as PhoneNumber,isNULL(op.PaymentMethod,'N/A')PaymentMethod,isNULL(op.CollectionLocation,'N/A')CollectionLocation,isNULL(op.IsHomeCollection,'0')IsHomeCollection,vc.status,cast(pr.Date as date)DateCreated
+            pr.patient_tel as PhoneNumber,lab_test_desc,isNULL(op.PaymentMethod,'N/A')PaymentMethod,isNULL(op.CollectionLocation,'N/A')CollectionLocation,isNULL(op.IsHomeCollection,'0')IsHomeCollection,vc.status,cast(pr.Date as date)DateCreated
             from visit_cycle VC
             left JOIN (select * from DocumentsLog where document_type='covid_cert')dl ON VC.cycle_id= dl.cycle_id
             inner join patient_registration pr on pr.patient_id=vc.patient_id
@@ -354,6 +385,30 @@ where cast(DateCreated as Date) between  cast({startDate} as Date) and cast({end
                         SqlDataAdapter da = new SqlDataAdapter(command);
                         da.Fill(dtData);
                         con.Close();
+            return dtData;
+        }
+
+        private DataTable GetCompletedVisitsByDateRange(DateTime startDate, DateTime endDate)
+        {
+            DataTable dtData = new DataTable();
+            SqlConnection con = new SqlConnection(conString);
+            con.Open();
+            SqlCommand command = new SqlCommand($@"select  vc.cycle_id, (PR.patient_first_name+' '+ pr.patient_middle_name +' '+ PR.patient_last_name) AS FullName, vc.cycle_created_time,
+            isNULL(dl.IsWhatsappSent,'0')IsWhatsappSent, pr.gender, id_no, pr.email, pr.nationality, channel,
+            pr.patient_tel as PhoneNumber,lab_test_desc,isNULL(op.PaymentMethod,'N/A')PaymentMethod,isNULL(op.CollectionLocation,'N/A')CollectionLocation,isNULL(op.IsHomeCollection,'0')IsHomeCollection,vc.status,cast(pr.Date as date)DateCreated
+            from visit_cycle VC
+            left JOIN (select * from DocumentsLog where document_type='covid_cert')dl ON VC.cycle_id= dl.cycle_id
+            inner join patient_registration pr on pr.patient_id=vc.patient_id
+            left join (select cycle_id,max(lab_test_desc)lab_test_desc from test_results ts inner join lab_test lt on ts.lab_test_id=lt.lab_test_id
+            group by cycle_id
+            )r on r.cycle_id=vc.cycle_id
+            left join onlinepatients op on op.CycleId=vc.cycle_id
+            where test_type like '%PCR%' and cast(vc.cycle_created_time as date) between cast('{startDate}' as date) and cast('{endDate}' as date) and dl.IsWhatsappSent='1'
+            order by cycle_created_time desc
+            ", con);
+            SqlDataAdapter da = new SqlDataAdapter(command);
+            da.Fill(dtData);
+            con.Close();
             return dtData;
         }
 
@@ -465,8 +520,8 @@ where cast(DateCreated as Date) = cast({date} as Date)", con);
         public JsonResult UpdateStatus(int newstatus, Guid cycleId)
         {
             var responseMessage = new ResponseMessage();
-            string strQry = "update onlinepatients set status=" +
-                newstatus + " where cycleId='"+ cycleId + "'";
+            string strQry = "update visit_cycle set status=" +
+                newstatus + " where cycle_id='"+ cycleId + "'";
             SqlConnection con = new SqlConnection(conString);
             con.Open();
             SqlCommand command = new SqlCommand(strQry, con);
@@ -560,6 +615,29 @@ where cast(DateCreated as Date) = cast({date} as Date)", con);
                     if (rdr.Read())
                     {
                         TotalCount = rdr["CountResult"].ToString();
+                    }
+
+                }
+
+            }
+            return Json(TotalCount, JsonRequestBehavior.AllowGet);
+        }
+
+        public JsonResult FetchNewBookingToday()
+        {
+            string TotalCount = string.Empty;
+            using (SqlConnection con = new SqlConnection(DbConn))
+            {
+                using (SqlCommand cmd = new SqlCommand(@"select count(*) as PatientCount from visit_cycle vc 
+			inner join onlinepatients op on op.CycleId=vc.cycle_id
+			where vc.test_type like '%PCR%' and cast(vc.cycle_created_time as date) = cast(getdate() as date) and vc.status=0
+			and IsHomeCollection=1", con))
+                {
+                    con.Open();
+                    SqlDataReader rdr = cmd.ExecuteReader();
+                    if (rdr.Read())
+                    {
+                        TotalCount = rdr["PatientCount"].ToString();
                     }
 
                 }
