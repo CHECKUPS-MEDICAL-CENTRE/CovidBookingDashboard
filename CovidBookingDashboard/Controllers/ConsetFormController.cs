@@ -25,15 +25,15 @@ namespace CovidBookingDashboard.Controllers
             converter.Options.PdfPageSize = PdfPageSize.A4;
 
             // header settings
-            converter.Options.DisplayHeader = false;
-            converter.Header.DisplayOnFirstPage = false;
-            converter.Header.DisplayOnOddPages = false;
-            converter.Header.DisplayOnEvenPages = false;
+            converter.Options.DisplayHeader = true;
+            converter.Header.DisplayOnFirstPage = true;
+            converter.Header.DisplayOnOddPages = true;
+            converter.Header.DisplayOnEvenPages = true;
             converter.Header.Height = 128;
-            converter.Options.DisplayFooter = false;
-            converter.Footer.DisplayOnFirstPage = false;
-            converter.Footer.DisplayOnOddPages = false;
-            converter.Footer.DisplayOnEvenPages = false;
+            converter.Options.DisplayFooter = true;
+            converter.Footer.DisplayOnFirstPage = true;
+            converter.Footer.DisplayOnOddPages = true;
+            converter.Footer.DisplayOnEvenPages = true;
             converter.Footer.Height = 128;
 
             string PatientName = "";
@@ -93,7 +93,6 @@ where vc.cycle_id='{CycleID}'", con))
      <div class='container'>
         <div class='panel'>
             <div class='row'>
-            <img src='C:\consentForm\Res\header.png' style='width:100%; position: static;'>
             </div><br />
 
 <div class='row'>
@@ -436,14 +435,12 @@ Date<span style='color: black !important;font-weight:700 ;color: black;'>:</span
 </div>
 </div>
              <div class='row'>
-<img src='C:\Certificate\Res\footer.png' style='width:100%; position: static; margin-bottom: 0 !important;'>
 </div>
 </div>
 </div>
   <div class='container' style='page-break-before: always;'>
         <div class='panel'>
             <div class='row'>
-            <img src='C:\consentForm\Res\header.png' style='width:100%; position: static;'>
             </div><br />
 
 <div class='row'>
@@ -527,7 +524,7 @@ manage its employee post-COVID  test resullt.
         <div class='col-md-4' style='margin: 0 !important;'>
                        <div style='position: relative;text-align: center;'>
   <img src='C:/Certificate/Res/stamp.png'style='width:100%;'>
-  <div style='position: absolute;top: 50%;left: 50%;transform: translate(-50%, -50%);'>19-07-2021</div>
+  <div style='position: absolute;top: 50%;left: 50%;transform: translate(-50%, -50%);'>{date}</div>
 </div>
           </div>
 
@@ -538,7 +535,6 @@ manage its employee post-COVID  test resullt.
 </div>
 
 <div class='row'>
-<img src='C:\Certificate\Res\footer.png' style='width:100%; position: static;'>
 </div>
 </div>
 </div>
@@ -566,7 +562,7 @@ manage its employee post-COVID  test resullt.
 
             // return resulted pdf document
             FileResult fileResult = new FileContentResult(pdf, "application/pdf");
-            fileResult.FileDownloadName = "Document.pdf";
+            fileResult.FileDownloadName = PatientName+".pdf";
             return fileResult;
         }
         
