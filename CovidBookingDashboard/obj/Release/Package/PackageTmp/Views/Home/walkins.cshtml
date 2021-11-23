@@ -1,0 +1,717 @@
+﻿
+@{
+    ViewBag.Title = "index2";
+    Layout = "~/Views/Shared/_Layout2.cshtml";
+}
+@using CovidBookingDashboard.Controllers;
+@section styles {
+    <link href="//cdn.datatables.net/1.10.9/css/jquery.dataTables.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css">
+}
+@section Scripts
+    {
+    <script type="text/javascript"
+            charset="utf8"
+            src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.9.1.min.js"></script>
+    <script src="//cdn.datatables.net/1.10.9/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script>
+    <script>
+        var table = [];
+        $(document).ready(function () {
+            fetchBookings();
+            FetchBookingCountToday();
+            FetchBookingCountHomesampletoday();
+            FetchBookingCountwalkinstoday();
+            FetchBookingCountThisMonth();
+            setInterval(function () {
+                /*$('#patientsTables').load(fetchBookings());*/
+                $('newClients').load(FetchBookingCountToday());
+                $('HomeSample').load(FetchBookingCountHomesampletoday());
+                $('WalkIns').load(FetchBookingCountwalkinstoday());
+                $('MonthlyClients').load(FetchBookingCountThisMonth());
+            }, 2000)
+        });
+        function FetchBookingCountToday() {
+            var counts;
+            $.ajax({
+                type: 'GET',
+                url: '/Home/FetchBookingCountToday',
+                dataType: 'JSON',
+                async: false,
+                contentType: 'application/json;charset=utf-8',
+                success: function (res) {
+                    console.log(res);
+                    document.getElementById("newClients").innerHTML = res;
+                }
+            });
+            return counts;
+        }
+        function FetchBookingCountHomesampletoday() {
+            var counts;
+            $.ajax({
+                type: 'GET',
+                url: '/Home/FetchBookingCountHomesampletoday',
+                dataType: 'JSON',
+                async: false,
+                contentType: 'application/json;charset=utf-8',
+                success: function (res) {
+                    document.getElementById("HomeSample").innerHTML = res;
+                }
+            });
+            return counts;
+        }
+        function FetchBookingCountwalkinstoday() {
+            var counts;
+            $.ajax({
+                type: 'GET',
+                url: '/Home/FetchBookingCountwalkinstoday',
+                dataType: 'JSON',
+                async: false,
+                contentType: 'application/json;charset=utf-8',
+                success: function (res) {
+                    document.getElementById("WalkIns").innerHTML = res;
+                }
+            });
+            return counts;
+        }
+        function FetchBookingCountThisMonth() {
+            var counts;
+            $.ajax({
+                type: 'GET',
+                url: '/Home/FetchBookingCountThisMonth',
+                dataType: 'JSON',
+                async: false,
+                contentType: 'application/json;charset=utf-8',
+                success: function (res) {
+                    document.getElementById("MonthlyClients").innerHTML = res;
+                }
+            });
+            return counts;
+        }
+        var dataBookings = [];
+        function fetchBookings() {
+            var bookings;
+            $.ajax({
+                type: 'GET',
+                url: '/Home/getTodaysWalkinBookings',
+                dataType: 'JSON',
+                async: false,
+                contentType: 'application/json;charset=utf-8',
+                success: function (res) {
+                    dataBookings = res;
+                    bookings = res;
+                    populatBookings();
+                }
+            });
+            return bookings;
+        }
+
+        function populatBookings() {
+            var dt;
+            $('#patientsTables').DataTable({
+                data: dataBookings,
+                destroy: true,
+                "autoWidth": false,
+                dom: 'Bfrtip',
+                buttons: [
+                    'excel', 'pdf', 'print'
+                ],
+                columns: [
+                    {
+                        title: "Actions", data: null, render: function (data, type, row) {
+                            if (data.status === 1) {
+                                if (type === 'display') {
+                                    dt = '<center><a class="btn btn-primary " onclick="updateBooking(\'' + data.CycleId + '\',\'' + data.status + '\')">CONFIRM</a></center>';
+                                }
+                            } else if (data.Status === 2 && data.IsHomeCollection === 1) {
+                                if (type === 'display') {
+                                    dt = '<center><a class="btn btn-primary " onclick="updateBooking(\'' + data.CycleId + '\',\'' + data.status + '\')">Scheduled</a></center>';
+                                }
+                            }
+                            else if (data.status === 3) {
+                                if (type === 'display') {
+                                    dt = '<center><a class="btn btn-primary " onclick="updateBooking(\'' + data.CycleId + ',' + data.status + '\')">Collected</a></center>';
+                                }
+                            } else if (data.status === 4) {
+                                if (type === 'display') {
+                                    dt = '<div class="dropdown ">'
+                                        + '<button class="fa fa-list btn btn-primary dropdown-toggle " type="button" data-toggle="dropdown" ">'
+                                        + '<span class="caret"></span></button>'
+                                        + '<ul class="dropdown-menu">'
+                                        + '<li><a onclick="ViewCertificate(\'' + data.CycleId + '\')">View Certificate</a></li>'
+                                        + '<li><a onclick="SendWhatsAPP(\'' + data.CycleId + '\')">SendWhatsApp</a></li>'
+                                        + '<li><a onclick="SendEmail(\'' + data.CycleId + '\')">Send Email</a></li>'
+                                        + '</ul>'
+                                        + '</div>';
+                                }
+
+                            }
+                            else if (data.status === 5) {
+                                if (type === 'display') {
+                                    dt = '<div class="dropdown ">'
+                                        + '<button class="fa fa-list btn btn-primary dropdown-toggle " type="button" data-toggle="dropdown" ">'
+                                        + '<span class="caret"></span></button>'
+                                        + '<ul class="dropdown-menu">'
+                                        + '<li><a onclick="ViewCertificate(\'' + data.CycleId + '\')">View Certificate</a></li>'
+                                        + '<li><a onclick="SendWhatsAPP(\'' + data.CycleId + '\')">Resend WhatsApp</a></li>'
+                                        + '<li><a onclick="SendEmail(\'' + data.CycleId + '\')">Resend Email</a></li>'
+                                        + '</ul>'
+                                        + '</div>';
+                                }
+                            }
+                            return dt
+                        },
+                        className: "dt-body-center"
+                    },
+                    { title: "Client Name", data: "FirstName" },
+                    { title: "PhoneNumber", data: "Telephone" },
+                    { title: "Visit Date", data: "VisitDate" },
+                    { title: "Booking Date", data: "DateCreated" },
+                    { title: "Booking Time", data: "VisitTime" },
+                    { title: "Collection Location", data: "CollectionLocation" },
+                    /* { title: "CycleId", data: "CycleId" },*/
+                    {
+                        title: "Status", data: null, render: function (data, type, row) {
+                            if (data.status === 1) {
+                                return '<span class="label label-danger">New</span>';
+                            }
+                            else if (data.status === 2) {
+                                return '<span class="label label-default">Confirmed</span>';
+                            }
+                            else if (data.status === 3) {
+                                return '<span class="label label-success">Sample Collected</span>';
+                            } else if (data.status === 4) {
+                                return '<span class="label label-success">Has Results</span>';
+                            } else if (data.status === 5) {
+                                return '<span class="label label-info">Completed</span>';
+                            }
+
+                        }
+                    },
+
+                ],
+                "aaSorting": [[4, "desc"], [5, "desc"]]
+            });
+        }
+
+        function updateBooking(id, status) {
+            jQuery.grep(dataBookings, function (n, i) {
+                if (n.CycleId === id) {
+                    if (parseInt(status) === 1) {
+                        console.log('Status1', id)
+                        $('#status').val(2);
+                        $('#clientName').val(n.FirstName);
+                        $('#mid').val(id);
+                    }
+                    else if (parseInt(status) === 2) {
+                        console.log('Status2', id)
+                        $('#status').val(3);
+                        $('#clientName').val(n.FirstName);
+                        $('#mid').val(id);
+                    }
+                    else if (parseInt(status) === 3) {
+                        console.log('Status3', id)
+                        $('#status').val(4);
+                        $('#clientName').val(n.FirstName);
+                        $('#mid').val(id);
+                    }
+                    else if (parseInt(status) === 4) {
+                        console.log('Status4', id)
+                        $('#status').val(5);
+                        $('#clientName').val(n.FirstName);
+                        $('#mid').val(id);
+                    }
+
+                }
+            })
+            $('#PatientBookingModal').modal('show');
+        }
+        function ViewCertificate(CycleID) {
+            console.log(CycleID);
+            window.open('/Booking/CertPDF?CycleID=' + CycleID);
+
+        }
+        function SendWhatsAPP(id) {
+            jQuery.grep(dataBookings, function (n, i) {
+                if (n.CycleId === id) {
+                    $('#clientNameW').val(n.FirstName);
+                    $('#midW').val(id);
+                }
+            })
+            $('#PatientWhatsAppModal').modal('show');
+        }
+        function SendEmail(id) {
+            jQuery.grep(dataBookings, function (n, i) {
+                if (n.CycleId === id) {
+                    $('#clientNameE').val(n.FirstName);
+                    $('#midE').val(id);
+                }
+            })
+            $('#PatientEmailModal').modal('show');
+        }
+
+        function WhatsAppSender() {
+            var url = '/Booking/SendWhatsApp';
+            var postObj = {
+                "cycleId": $('#mid').val(),
+            };
+            customPost("Proceed to send Certificate Via WhatsApp?", url, postObj, 'PatientWhatsAppModal', 'PatientWhatsAppModal',
+                'PATIENT INFORMATION', populatBookings);
+        }
+
+        function EmailSender() {
+            var url = '/Booking/SendEmail';
+            var postObj = {
+                "cycleId": $('#mid').val(),
+            };
+            customPost("Proceed to send Certificate Via Email?", url, postObj, 'PatientEmailModal', 'PatientEmailModal',
+                'PATIENT INFORMATION', populatBookings);
+        }
+        function ClientUpdate() {
+            var url = '/Home/UpdateStatus';
+            var postObj = {
+                "cycleId": $('#mid').val(),
+                "newstatus": $('#status').val()
+            };
+            customPost("Proceed to update booking?", url, postObj, 'PatientBookingModal', 'PatientBookingModal',
+                'PATIENT INFORMATION', populatBookings);
+        }
+        function CustomAlert(title, text, type) {
+            swal({
+                title: title,
+                text: text,
+                type: type,
+                showCancelButton: true,
+                showConfirmButton: true,
+                confirmButtonClass: 'btn btn-quickSWap'
+            });
+        }
+        function customPost(text, url, postObj, modalName, formName, actionName, populatingClass) {
+            swal({
+                title: "ARE YOU SURE?",
+                text: text,
+                type: 'warning',
+                showCancelButton: true,
+                showConfirmButton: true,
+                confirmButtonClass: 'btn btn-success',
+                cancelButtonClass: 'btn btn-danger',
+                confirmButtonText: 'Yes!',
+                closeOnConfirm: false,
+                closeOnCancel: false
+            }, function (isConfirm) {
+                if (isConfirm) {
+                    $.ajax({
+                        url: url,
+                        data: JSON.stringify(postObj),
+                        contentType: "application/json;charst=utf-8",
+                        dataType: 'JSON',
+                        type: 'POST',
+                        success: function (data) {
+                            if (data.status === "success") {
+                                if (modalName !== null) {
+                                    $('#' + modalName).modal('hide');
+                                }
+                                swal("Updated!", "Booking has been updated.!", "success");
+                                $('#' + modalName).modal('hide');
+                                fetchBookings();
+                                populatBookings();
+                                //$(':input', '#' + formName)
+                                //    .not(':button, :submit, :reset, :hidden')
+                                //    .val('')
+                                //    .prop('checked', false)
+                                //    .prop('selectedIndex', 0);
+                                //populatingClass();
+                                //CustomAlert(actionName, data.Message, data.status);
+                            } else {
+                                swal("Updated!", "Booking has been updated.!", "success");
+                                $('#' + modalName).modal('hide');
+                                fetchBookings();
+                                populatBookings();
+                            }
+                        }
+                    });
+
+                } else {
+                    swal("Cancelled", "Your have cancelled :)", "error");
+                }
+            });
+        }
+    </script>
+}
+<main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
+    <!-- Navbar -->
+    <nav class="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl" id="navbarBlur" navbar-scroll="true">
+        <div class="container-fluid py-1 px-3">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
+                    <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="javascript:;">Pages</a></li>
+                    <li class="breadcrumb-item text-sm text-dark active" aria-current="page">Dashboard</li>
+                </ol>
+                <h6 class="font-weight-bolder mb-0">Dashboard </h6>
+            </nav>
+            <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
+                <div class="ms-md-auto pe-md-3 d-flex align-items-center">
+                    <div class="input-group input-group-outline">
+                        <label class="form-label">Type here.</label>
+                        <input type="text" class="form-control">
+                    </div>
+                </div>
+                <ul class="navbar-nav  justify-content-end">
+                    <li class="nav-item d-flex align-items-center">
+                        <a href="javascript:;" class="nav-link text-body font-weight-bold px-0">
+                            <i class="fa fa-user me-sm-1"></i>
+                            <span class="d-sm-inline d-none">Sign In</span>
+                        </a>
+                    </li>
+                    <li class="nav-item d-xl-none ps-3 d-flex align-items-center">
+                        <a href="javascript:;" class="nav-link text-body p-0" id="iconNavbarSidenav">
+                            <div class="sidenav-toggler-inner">
+                                <i class="sidenav-toggler-line"></i>
+                                <i class="sidenav-toggler-line"></i>
+                                <i class="sidenav-toggler-line"></i>
+                            </div>
+                        </a>
+                    </li>
+                    <li class="nav-item px-3 d-flex align-items-center">
+                        <a href="javascript:;" class="nav-link text-body p-0">
+                            <i class="fa fa-cog fixed-plugin-button-nav cursor-pointer"></i>
+                        </a>
+                    </li>
+                    <li class="nav-item dropdown pe-2 d-flex align-items-center">
+                        <a href="javascript:;" class="nav-link text-body p-0" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fa fa-bell cursor-pointer"></i>
+                        </a>
+                        <ul class="dropdown-menu  dropdown-menu-end  px-2 py-3 me-sm-n4" aria-labelledby="dropdownMenuButton">
+                            <li class="mb-2">
+                                <a class="dropdown-item border-radius-md" href="javascript:;">
+                                    <div class="d-flex py-1">
+                                        <div class="my-auto">
+                                            <img src="../assets/img/team-2.jpg" class="avatar avatar-sm  me-3 ">
+                                        </div>
+                                        <div class="d-flex flex-column justify-content-center">
+                                            <h6 class="text-sm font-weight-normal mb-1">
+                                                <span class="font-weight-bold">New message</span> from Laur
+                                            </h6>
+                                            <p class="text-xs text-secondary mb-0">
+                                                <i class="fa fa-clock me-1"></i>
+                                                13 minutes ago
+                                            </p>
+                                        </div>
+                                    </div>
+                                </a>
+                            </li>
+                            <li class="mb-2">
+                                <a class="dropdown-item border-radius-md" href="javascript:;">
+                                    <div class="d-flex py-1">
+                                        <div class="my-auto">
+                                            <img src="../assets/img/small-logos/logo-spotify.svg" class="avatar avatar-sm bg-gradient-dark  me-3 ">
+                                        </div>
+                                        <div class="d-flex flex-column justify-content-center">
+                                            <h6 class="text-sm font-weight-normal mb-1">
+                                                <span class="font-weight-bold">New album</span> by Travis Scott
+                                            </h6>
+                                            <p class="text-xs text-secondary mb-0">
+                                                <i class="fa fa-clock me-1"></i>
+                                                1 day
+                                            </p>
+                                        </div>
+                                    </div>
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item border-radius-md" href="javascript:;">
+                                    <div class="d-flex py-1">
+                                        <div class="avatar avatar-sm bg-gradient-secondary  me-3  my-auto">
+                                            <svg width="12px" height="12px" viewBox="0 0 43 36" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                                                <title>credit-card</title>
+                                                <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                                    <g transform="translate(-2169.000000, -745.000000)" fill="#FFFFFF" fill-rule="nonzero">
+                                                        <g transform="translate(1716.000000, 291.000000)">
+                                                            <g transform="translate(453.000000, 454.000000)">
+                                                                <path class="color-background" d="M43,10.7482083 L43,3.58333333 C43,1.60354167 41.3964583,0 39.4166667,0 L3.58333333,0 C1.60354167,0 0,1.60354167 0,3.58333333 L0,10.7482083 L43,10.7482083 Z" opacity="0.593633743"></path>
+                                                                <path class="color-background" d="M0,16.125 L0,32.25 C0,34.2297917 1.60354167,35.8333333 3.58333333,35.8333333 L39.4166667,35.8333333 C41.3964583,35.8333333 43,34.2297917 43,32.25 L43,16.125 L0,16.125 Z M19.7083333,26.875 L7.16666667,26.875 L7.16666667,23.2916667 L19.7083333,23.2916667 L19.7083333,26.875 Z M35.8333333,26.875 L28.6666667,26.875 L28.6666667,23.2916667 L35.8333333,23.2916667 L35.8333333,26.875 Z"></path>
+                                                            </g>
+                                                        </g>
+                                                    </g>
+                                                </g>
+                                            </svg>
+                                        </div>
+                                        <div class="d-flex flex-column justify-content-center">
+                                            <h6 class="text-sm font-weight-normal mb-1">
+                                                Payment successfully completed
+                                            </h6>
+                                            <p class="text-xs text-secondary mb-0">
+                                                <i class="fa fa-clock me-1"></i>
+                                                2 days
+                                            </p>
+                                        </div>
+                                    </div>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <!-- End Navbar -->
+    <div class="container-fluid py-4">
+        <div class="row">
+            <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
+                <div class="card">
+                    <div class="card-header p-3 pt-2">
+                        <div class="icon icon-lg icon-shape bg-gradient-dark shadow-dark text-center border-radius-xl mt-n4 position-absolute">
+                            <i class="material-icons opacity-10">recent_actors</i>
+                        </div>
+                        <div class="text-end pt-1 new-clients">
+                            <p class="text-sm mb-0 text-capitalize">New Clients</p>
+                            <h4 class="mb-0" id="newClients"></h4>
+                        </div>
+                    </div>
+                    <hr class="dark horizontal my-0">
+                    <div class="card-footer p-3">
+                        <a href="@Url.Action("../Home/newbookings")"><p class="mb-0"><span class="text-success text-sm font-weight-bolder"> </span>Daily Registered Clients</p></a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
+                <div class="card">
+                    <div class="card-header p-3 pt-2">
+                        <div class="icon icon-lg icon-shape bg-gradient-primary shadow-primary text-center border-radius-xl mt-n4 position-absolute">
+                            <i class="material-icons opacity-10">account_circle</i>
+                        </div>
+                        <div class="text-end pt-1 MonthToDate">
+                            <p class="text-sm mb-0 text-capitalize">Month ToDate Clients</p>
+                            <h4 class="mb-0" id="MonthlyClients"></h4>
+                        </div>
+                    </div>
+                    <hr class="dark horizontal my-0">
+                    <div class="card-footer p-3">
+                        <p class="mb-0"><span class="text-success text-sm font-weight-bolder"></span>Monthly registered clients</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
+                <div class="card">
+                    <div class="card-header p-3 pt-2">
+                        <div class="icon icon-lg icon-shape bg-gradient-success shadow-success text-center border-radius-xl mt-n4 position-absolute">
+                            <i class="material-icons opacity-10">person</i>
+                        </div>
+                        <div class="text-end pt-1">
+                            <p class="text-sm mb-0 text-capitalize">HOME SAMPLE</p>
+                            <h4 class="mb-0" id="HomeSample"></h4>
+                        </div>
+                    </div>
+                    <hr class="dark horizontal my-0">
+                    <div class="card-footer p-3">
+                        <a href="@Url.Action("../Home/homesample")"><p class="mb-0"><span class="text-danger text-sm font-weight-bolder"></span>Daily home collections</p></a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-sm-6">
+                <div class="card">
+                    <div class="card-header p-3 pt-2">
+                        <div class="icon icon-lg icon-shape bg-gradient-info shadow-info text-center border-radius-xl mt-n4 position-absolute">
+                            <i class="material-icons opacity-10">accessibility</i>
+                        </div>
+                        <div class="text-end pt-1">
+                            <p class="text-sm mb-0 text-capitalize">WALK-INS</p>
+                            <h4 class="mb-0" id="WalkIns"></h4>
+                        </div>
+                    </div>
+                    <hr class="dark horizontal my-0">
+                    <div class="card-footer p-3">
+                        <a href="@Url.Action("../Home/walkins")"><p class="mb-0"><span class="text-success text-sm font-weight-bolder"></span>Daily total walk-ins</p></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-lg-12 col-md-12 mb-md-0 mb-4">
+                <div class="card">
+                    <div class="card-header pb-0">
+                        <div class="row">
+                            <div class="col-lg-6 col-7">
+                                <h6>List of Daily Walkins</h6>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body px-2 pb-2">
+                        <div class="table-responsive">
+                            <table id="patientsTables" class="table align-items-center mb-0"></table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @*START MODAL*@
+            <div id="PatientBookingModal" class="modal fade" role="dialog">
+                <div class="modal-dialog modal-md">
+
+                    <!-- Modal content-->
+                    <div class="modal-content">
+                        <div class="modal-header btn-Ocelot" style="text-align:center">
+                            <h4 class="modal-title">UPDATE BOOKING STATUS</h4>
+                        </div>
+                        <div class="modal-body">
+                            <form id="scheduleWorkShopForm">
+                                <div class="row">
+                                    <div class="col-md-12">
+
+                                        <div class="row">
+                                            <div class="col-xs-12">
+                                                <div class="row">
+                                                    <div class="col-xs-6">
+                                                        <label for="driverName">CLIENT NAME:</label>
+                                                    </div>
+                                                    <div class="col-xs-10">
+                                                        <div class="input-group date">
+                                                            <input type="hidden" id="status" />
+                                                            <input type="hidden" id="mid" />
+                                                            <input type="text" class="form-control" id="clientName" readonly>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div><br />
+                                    </div>
+                                </div>
+
+                            </form>
+
+                        </div>
+                        <div class="modal-footer">
+                            <a class="btn btn-Ocelot" onclick="ClientUpdate()">SUBMIT</a>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            @*END MODAL*@
+            @*WHATSAPP START MODAL*@
+            <div id="PatientWhatsAppModal" class="modal fade" role="dialog">
+                <div class="modal-dialog modal-md">
+
+                    <!-- Modal content-->
+                    <div class="modal-content">
+                        <div class="modal-header btn-Ocelot" style="text-align:center">
+                            <h4 class="modal-title">SEND CERTIFICATE</h4>
+                        </div>
+                        <div class="modal-body">
+                            <form id="scheduleWorkShopForm">
+                                <div class="row">
+                                    <div class="col-md-12">
+
+                                        <div class="row">
+                                            <div class="col-xs-12">
+                                                <div class="row">
+                                                    <div class="col-xs-6">
+                                                        <label for="driverName">CLIENT NAME:</label>
+                                                    </div>
+                                                    <div class="col-xs-10">
+                                                        <div class="input-group date">
+                                                            <input type="hidden" id="midW" />
+                                                            <input type="text" class="form-control" id="clientNameW" readonly>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div><br />
+                                    </div>
+                                </div>
+
+                            </form>
+
+                        </div>
+                        <div class="modal-footer">
+                            <a class="btn btn-Ocelot" onclick="WhatsAppSender()">SUBMIT</a>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            @*END MODAL*@
+
+            @*EMAIL START MODAL*@
+            <div id="PatientEmailModal" class="modal fade" role="dialog">
+                <div class="modal-dialog modal-md">
+
+                    <!-- Modal content-->
+                    <div class="modal-content">
+                        <div class="modal-header btn-Ocelot" style="text-align:center">
+                            <h4 class="modal-title">SEND CERTIFICATE</h4>
+                        </div>
+                        <div class="modal-body">
+                            <form id="scheduleWorkShopForm">
+                                <div class="row">
+                                    <div class="col-md-12">
+
+                                        <div class="row">
+                                            <div class="col-xs-12">
+                                                <div class="row">
+                                                    <div class="col-xs-6">
+                                                        <label for="driverName">CLIENT NAME:</label>
+                                                    </div>
+                                                    <div class="col-xs-10">
+                                                        <div class="input-group date">
+                                                            <input type="hidden" id="midE" />
+                                                            <input type="text" class="form-control" id="clientNameE" readonly>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div><br />
+                                    </div>
+                                </div>
+
+                            </form>
+
+                        </div>
+                        <div class="modal-footer">
+                            <a class="btn btn-Ocelot" onclick="EmailSender()">SUBMIT</a>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            @*END MODAL*@
+        </div>
+    </div>
+    <footer class="footer py-4  ">
+        <div class="container-fluid">
+            <div class="row align-items-center justify-content-lg-between">
+                <div class="col-lg-6 mb-lg-0 mb-4">
+                    <div class="copyright text-center text-sm text-muted text-lg-start">
+                        ©
+                        <script>
+                            document.write(new Date().getFullYear())
+                        </script>,
+                        made with <i class="fa fa-heart"></i> by
+                        <a href="https://www.creative-tim.com" class="font-weight-bold" target="_blank">Creative Tim</a>
+                        for a better web.
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <ul class="nav nav-footer justify-content-center justify-content-lg-end">
+                        <li class="nav-item">
+                            <a href="https://www.creative-tim.com" class="nav-link text-muted" target="_blank">Creative Tim</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="https://www.creative-tim.com/presentation" class="nav-link text-muted" target="_blank">About Us</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="https://www.creative-tim.com/blog" class="nav-link text-muted" target="_blank">Blog</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="https://www.creative-tim.com/license" class="nav-link pe-0 text-muted" target="_blank">License</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </footer>
+</main>
+

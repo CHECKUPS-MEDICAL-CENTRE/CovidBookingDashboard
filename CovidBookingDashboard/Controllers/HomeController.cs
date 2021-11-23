@@ -88,7 +88,7 @@ namespace CovidBookingDashboard.Controllers
                     Email = @dr["email"].ToString(),
                     IdNumber = @dr["id_no"].ToString(),
                     VisitDate = Convert.ToDateTime(@dr["cycle_created_time"]).ToString("MM-dd-yyyy"),
-                    VisitTime = Convert.ToDateTime(@dr["cycle_created_time"]).ToString("HH:mm:ss"),
+                    VisitTime = Convert.ToDateTime(@dr["DateCreated"]).ToString("HH:mm:ss"),
                     //CollectionSlot = @dr["CollectionSlot"].ToString(),
                     status = Convert.ToInt32(@dr["status"].ToString()),
                     IsHomeCollection = Convert.ToInt32(@dr["IsHomeCollection"].ToString()),
@@ -119,7 +119,7 @@ namespace CovidBookingDashboard.Controllers
                     Email = @dr["email"].ToString(),
                     IdNumber = @dr["id_no"].ToString(),
                     VisitDate = Convert.ToDateTime(@dr["cycle_created_time"]).ToString("MM-dd-yyyy"),
-                    VisitTime = Convert.ToDateTime(@dr["cycle_created_time"]).ToString("HH:mm:ss"),
+                    VisitTime = Convert.ToDateTime(@dr["DateCreated"]).ToString("HH:mm:ss"),
                     //CollectionSlot = @dr["CollectionSlot"].ToString(),
                     status = Convert.ToInt32(@dr["status"].ToString()),
                     //IsHomeCollection = Convert.ToInt32(@dr["IsHomeCollection"].ToString()),
@@ -371,7 +371,7 @@ where cast(DateCreated as Date) between  cast({startDate} as Date) and cast({end
             con.Open();
             SqlCommand command = new SqlCommand($@"select  vc.cycle_id, (PR.patient_first_name+' '+ pr.patient_middle_name +' '+ PR.patient_last_name) AS FullName, vc.cycle_created_time,
             isNULL(dl.IsWhatsappSent,'0')IsWhatsappSent, pr.gender, id_no, pr.email, pr.nationality, channel,
-            pr.patient_tel as PhoneNumber,lab_test_desc,isNULL(op.PaymentMethod,'N/A')PaymentMethod,isNULL(op.CollectionLocation,'N/A')CollectionLocation,isNULL(op.IsHomeCollection,'0')IsHomeCollection,vc.status,cast(pr.Date as date)DateCreated
+            pr.patient_tel as PhoneNumber,lab_test_desc,isNULL(op.PaymentMethod,'N/A')PaymentMethod,isNULL(op.CollectionLocation,'N/A')CollectionLocation,isNULL(op.IsHomeCollection,'0')IsHomeCollection,vc.status,vc.DateCreated
             from visit_cycle VC
             left JOIN (select * from DocumentsLog where document_type='covid_cert')dl ON VC.cycle_id= dl.cycle_id
             inner join patient_registration pr on pr.patient_id=vc.patient_id
@@ -379,8 +379,8 @@ where cast(DateCreated as Date) between  cast({startDate} as Date) and cast({end
             group by cycle_id
             )r on r.cycle_id=vc.cycle_id
             left join onlinepatients op on op.CycleId=vc.cycle_id
-            where test_type like '%PCR%' and cast(vc.cycle_created_time as date) between cast('{startDate}' as date) and cast('{endDate}' as date) and vc.status='{status}'
-            order by cycle_created_time desc
+            where test_type like '%PCR%' and cast(vc.DateCreated as date) between cast('{startDate}' as date) and cast('{endDate}' as date) and vc.status='{status}'
+            order by DateCreated desc
             ", con);
                         SqlDataAdapter da = new SqlDataAdapter(command);
                         da.Fill(dtData);
@@ -395,7 +395,7 @@ where cast(DateCreated as Date) between  cast({startDate} as Date) and cast({end
             con.Open();
             SqlCommand command = new SqlCommand($@"select  vc.cycle_id, (PR.patient_first_name+' '+ pr.patient_middle_name +' '+ PR.patient_last_name) AS FullName, vc.cycle_created_time,
             isNULL(dl.IsWhatsappSent,'0')IsWhatsappSent, pr.gender, id_no, pr.email, pr.nationality, channel,
-            pr.patient_tel as PhoneNumber,lab_test_desc,isNULL(op.PaymentMethod,'N/A')PaymentMethod,isNULL(op.CollectionLocation,'N/A')CollectionLocation,isNULL(op.IsHomeCollection,'0')IsHomeCollection,vc.status,cast(pr.Date as date)DateCreated
+            pr.patient_tel as PhoneNumber,lab_test_desc,isNULL(op.PaymentMethod,'N/A')PaymentMethod,isNULL(op.CollectionLocation,'N/A')CollectionLocation,isNULL(op.IsHomeCollection,'0')IsHomeCollection,vc.status,vc.DateCreated
             from visit_cycle VC
             left JOIN (select * from DocumentsLog where document_type='covid_cert')dl ON VC.cycle_id= dl.cycle_id
             inner join patient_registration pr on pr.patient_id=vc.patient_id
@@ -403,8 +403,8 @@ where cast(DateCreated as Date) between  cast({startDate} as Date) and cast({end
             group by cycle_id
             )r on r.cycle_id=vc.cycle_id
             left join onlinepatients op on op.CycleId=vc.cycle_id
-            where test_type like '%PCR%' and cast(vc.cycle_created_time as date) between cast('{startDate}' as date) and cast('{endDate}' as date) and dl.IsWhatsappSent='1'
-            order by cycle_created_time desc
+            where test_type like '%PCR%' and cast(vc.DateCreated as date) between cast('{startDate}' as date) and cast('{endDate}' as date) and dl.IsWhatsappSent='1'
+            order by DateCreated desc
             ", con);
             SqlDataAdapter da = new SqlDataAdapter(command);
             da.Fill(dtData);
